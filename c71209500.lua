@@ -6,7 +6,7 @@ function c71209500.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,0x1c0+TIMING_DRAW_PHASE)
+	e1:SetHintTiming(0,0x1c0)
 	e1:SetCost(c71209500.efcost)
 	e1:SetTarget(c71209500.eftg)
 	e1:SetOperation(c71209500.efop)
@@ -43,5 +43,5 @@ function c71209500.efop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c71209500.efilter(e,re,rp)
-	return re:IsActiveType(TYPE_MONSTER) and aux.tgval(e,re,rp)
+	return re:IsActiveType(TYPE_MONSTER)
 end

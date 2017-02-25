@@ -5,7 +5,7 @@ function c70861343.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(0,0x1c0,TIMING_DRAW_PHASE)
+	e1:SetHintTiming(0,0x1c0)
 	e1:SetTarget(c70861343.target)
 	e1:SetOperation(c70861343.operation)
 	c:RegisterEffect(e1)
@@ -24,7 +24,7 @@ end
 function c70861343.filter(c,lv,e,tp)
 	return c:IsLevelBelow(lv) and c:IsRace(RACE_BEAST+RACE_WINDBEAST+RACE_INSECT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c70861343.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c70861343.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
 		and Duel.CheckReleaseGroup(tp,c70861343.cfilter,1,nil,e,tp) end
 	local rg=Duel.SelectReleaseGroup(tp,c70861343.cfilter,1,1,nil,e,tp)
@@ -39,9 +39,9 @@ function c70861343.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c70861343.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e:GetLabel(),e,tp)
 	local tc=g:GetFirst()
-	if tc then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		c:SetCardTarget(tc)
+		Duel.SpecialSummonComplete()
 	end
 end
 function c70861343.desop(e,tp,eg,ep,ev,re,r,rp)

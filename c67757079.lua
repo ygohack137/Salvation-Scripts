@@ -14,7 +14,7 @@ function c67757079.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c67757079.cfilter(c)
-	return c:IsFaceup() and c:GetCode()==94878265
+	return c:IsFaceup() and c:IsCode(94878265)
 end
 function c67757079.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,c67757079.cfilter,1,nil) end
@@ -27,7 +27,7 @@ function c67757079.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c67757079.spop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
-		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
-	end
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end

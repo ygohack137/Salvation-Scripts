@@ -9,6 +9,7 @@ function c58132856.initial_effect(c)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetOperation(c58132856.regop)
 	c:RegisterEffect(e2)
@@ -36,7 +37,7 @@ function c58132856.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsPreviousLocation(LOCATION_SZONE) and c:IsPreviousPosition(POS_FACEDOWN)
 		and c:IsReason(REASON_EFFECT) and c:IsReason(REASON_DESTROY) and rp~=tp then
-		c:RegisterFlagEffect(58132856,RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END,0,0)
+		c:RegisterFlagEffect(58132856,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
 	end
 end
 function c58132856.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -52,7 +53,7 @@ function c58132856.cfilter(c)
 	return c:IsFaceup() and c:IsCode(58132856)
 end
 function c58132856.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c58132856.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

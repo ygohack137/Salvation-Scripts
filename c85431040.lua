@@ -18,6 +18,7 @@ end
 function c85431040.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,300)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK)
 end
 function c85431040.filter(c,e,tp)
 	return c:IsCode(85431040) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -27,6 +28,7 @@ function c85431040.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	if ft>2 then ft=2 end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	local g=Duel.GetMatchingGroup(c85431040.filter,tp,LOCATION_DECK,0,nil,e,tp)
 	if g:GetCount()==0 then return end
 	if Duel.SelectYesNo(tp,aux.Stringid(85431040,1)) then
@@ -34,14 +36,15 @@ function c85431040.operation(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:Select(tp,1,ft,nil)
 		local tc=sg:GetFirst()
 		while tc do
-			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK)
-			--cannot trigger
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_CANNOT_TRIGGER)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e1)
+			if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK) then
+				--cannot trigger
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_CANNOT_TRIGGER)
+				e1:SetRange(LOCATION_MZONE)
+				e1:SetReset(RESET_EVENT+0x1fe0000)
+				tc:RegisterEffect(e1)
+			end
 			tc=sg:GetNext()
 		end
 		Duel.SpecialSummonComplete()

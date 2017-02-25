@@ -14,6 +14,7 @@ function c293542.initial_effect(c)
 	--to grave
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetOperation(c293542.regop)
 	c:RegisterEffect(e2)
@@ -31,9 +32,8 @@ function c293542.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c293542.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-	end
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function c293542.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -52,7 +52,7 @@ function c293542.regop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c293542.filter(c)
-	return c:IsSetCard(0x27) and c:GetCode()~=293542 and c:IsAbleToHand()
+	return c:IsSetCard(0x27) and not c:IsCode(293542) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c293542.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c293542.filter,tp,LOCATION_DECK,0,1,nil) end

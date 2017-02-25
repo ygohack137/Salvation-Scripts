@@ -10,7 +10,7 @@ function c13210191.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c13210191.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c13210191.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -27,7 +27,10 @@ function c13210191.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ct1=Duel.Destroy(g1,REASON_EFFECT)
 	if ct1==0 then return end
 	local g2=Duel.GetMatchingGroup(c13210191.filter,tp,0,LOCATION_ONFIELD,nil)
-	if g2:GetCount()<=ct1 then
+	local ct2=g2:GetCount()
+	if ct2==0 then return end
+	Duel.BreakEffect()
+	if ct2<=ct1 then
 		Duel.Destroy(g2,REASON_EFFECT)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)

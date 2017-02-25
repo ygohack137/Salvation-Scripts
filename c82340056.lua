@@ -2,7 +2,7 @@
 function c82340056.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e1:SetCondition(c82340056.condition)
@@ -17,7 +17,8 @@ function c82340056.filter(c)
 	return c:IsSetCard(0x21) and c:IsAbleToHand()
 end
 function c82340056.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,82340057,0,0x4011,0,0,1,RACE_ROCK,ATTRIBUTE_EARTH)
 		and Duel.IsExistingMatchingCard(c82340056.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
@@ -25,6 +26,7 @@ function c82340056.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c82340056.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.NegateAttack() then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,82340057,0,0x4011,0,0,1,RACE_ROCK,ATTRIBUTE_EARTH) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)

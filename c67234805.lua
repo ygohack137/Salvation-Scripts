@@ -1,5 +1,6 @@
 --能力吸収石
 function c67234805.initial_effect(c)
+	c:EnableCounterPermit(0x16)
 	c:SetCounterLimit(0x16,2)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -7,6 +8,13 @@ function c67234805.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
 	--Add counter
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetOperation(aux.chainreg)
+	c:RegisterEffect(e2)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 	e2:SetCode(EVENT_CHAIN_SOLVING)
@@ -40,8 +48,7 @@ function c67234805.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c67234805.ctop(e,tp,eg,ep,ev,re,r,rp)
-	local c=re:GetHandler()
-	if c:IsType(TYPE_MONSTER) then
+	if re:IsActiveType(TYPE_MONSTER) and e:GetHandler():GetFlagEffect(1)>0 then
 		e:GetHandler():AddCounter(0x16,1)
 	end
 end

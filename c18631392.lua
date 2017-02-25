@@ -20,7 +20,7 @@ function c18631392.initial_effect(c)
 	--announce 3 cards
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(18631392,0))
-	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_TOGRAVE+CATEGORY_ATKCHANGE)
+	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DECKDES+CATEGORY_ATKCHANGE)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
@@ -46,7 +46,11 @@ function c18631392.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoGrave(g1,REASON_COST)
 end
 function c18631392.anctg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,3) end
+	if chk==0 then 
+		if not Duel.IsPlayerCanDiscardDeck(tp,3) then return false end
+		local g=Duel.GetDecktopGroup(tp,3)
+		return g:FilterCount(Card.IsAbleToHand,nil)>0
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,0)
 	local ac1=Duel.AnnounceCard(tp)
 	Duel.Hint(HINT_SELECTMSG,tp,0)
@@ -56,8 +60,7 @@ function c18631392.anctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetOperation(c18631392.retop(ac1,ac2,ac3))
 end
 function c18631392.hfilter(c,code1,code2,code3)
-	local code=c:GetCode()
-	return (code==code1 or code==code2 or code==code3) and c:IsAbleToHand()
+	return c:IsCode(code1,code2,code3) and c:IsAbleToHand()
 end
 function c18631392.retop(code1,code2,code3)
 	return
@@ -81,13 +84,12 @@ function c18631392.retop(code1,code2,code3)
 			if c:IsRelateToEffect(e) then
 				local e1=Effect.CreateEffect(c)
 				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
-				e1:SetCode(EFFECT_SET_ATTACK)
+				e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 				e1:SetValue(hg:GetCount()*1000)
 				e1:SetReset(RESET_EVENT+0x1ff0000)
 				c:RegisterEffect(e1)
 				local e2=e1:Clone()
-				e2:SetCode(EFFECT_SET_DEFENCE)
+				e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
 				c:RegisterEffect(e2)
 			end
 		end

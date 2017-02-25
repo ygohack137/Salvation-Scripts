@@ -22,6 +22,7 @@ function c296499.initial_effect(c)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1)
+	e3:SetCondition(c296499.mtcon)
 	e3:SetOperation(c296499.mtop)
 	c:RegisterEffect(e3)
 end
@@ -35,12 +36,14 @@ end
 function c296499.atktarget(e,c)
 	return c:GetRace()==e:GetLabelObject():GetLabel()
 end
+function c296499.mtcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
 function c296499.mtop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnPlayer()~=tp then return end
 	if Duel.CheckReleaseGroup(tp,Card.IsReleasable,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(296499,0)) then
 		local g=Duel.SelectReleaseGroup(tp,Card.IsReleasable,1,1,nil)
 		Duel.Release(g,REASON_COST)
 	else
-		Duel.Destroy(e:GetHandler(),REASON_RULE)
+		Duel.Destroy(e:GetHandler(),REASON_COST)
 	end
 end

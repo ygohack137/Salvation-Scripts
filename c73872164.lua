@@ -20,7 +20,7 @@ function c73872164.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,c73872164.cfilter,1,1,REASON_COST+REASON_DISCARD)
 end
 function c73872164.filter(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup()
 end
 function c73872164.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c73872164.filter(chkc) end
@@ -32,12 +32,13 @@ end
 function c73872164.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+		Duel.BreakEffect()
 		local code=tc:GetCode()
 		local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_HAND,nil,code)
 		local hg=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 		Duel.ConfirmCards(tp,hg)
 		if g:GetCount()>0 then
-			Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
+			Duel.SendtoGrave(g,REASON_EFFECT)
 		end
 		Duel.ShuffleHand(1-tp)
 	end

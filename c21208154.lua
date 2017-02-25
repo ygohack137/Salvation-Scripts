@@ -22,12 +22,12 @@ function c21208154.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_SET_ATTACK_FINAL)
-	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_REPEAT+EFFECT_FLAG_DELAY)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetValue(c21208154.adval)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
-	e5:SetCode(EFFECT_SET_DEFENCE_FINAL)
+	e5:SetCode(EFFECT_SET_DEFENSE_FINAL)
 	c:RegisterEffect(e5)
 	--aclimit
 	local e6=Effect.CreateEffect(c)
@@ -36,9 +36,9 @@ function c21208154.initial_effect(c)
 	e6:SetOperation(c21208154.regop)
 	c:RegisterEffect(e6)
 end
-function c21208154.ttcon(e,c)
+function c21208154.ttcon(e,c,minc)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-3 and Duel.GetTributeCount(c)>=3
+	return minc<=3 and Duel.CheckTribute(c,3)
 end
 function c21208154.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectTribute(tp,c,3,3)

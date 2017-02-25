@@ -41,7 +41,7 @@ end
 function c51196805.posop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		Duel.ChangePosition(c,POS_FACEDOWN_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEDOWN_DEFENSE)
 	end
 end
 function c51196805.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -60,5 +60,4 @@ function c51196805.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(1-tp,ac)
 	Duel.DisableShuffleCheck()
 	Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
-	Duel.ConfirmCards(1-tp,g)
 end

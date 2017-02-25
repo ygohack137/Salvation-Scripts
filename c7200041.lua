@@ -1,5 +1,6 @@
 --メタル・シューター
 function c7200041.initial_effect(c)
+	c:EnableCounterPermit(0x26)
 	--summon success
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(7200041,0))

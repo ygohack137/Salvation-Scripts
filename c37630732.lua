@@ -2,7 +2,7 @@
 function c37630732.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c37630732.target)
@@ -10,7 +10,7 @@ function c37630732.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c37630732.filter1(c,e)
-	return c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
+	return not c:IsImmuneToEffect(e)
 end
 function c37630732.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsRace(RACE_MACHINE) and (not f or f(c))
@@ -19,7 +19,7 @@ end
 function c37630732.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
+		local mg1=Duel.GetFusionMaterial(tp)
 		local res=Duel.IsExistingMatchingCard(c37630732.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -36,7 +36,7 @@ function c37630732.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c37630732.activate(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-	local mg1=Duel.GetMatchingGroup(c37630732.filter1,tp,LOCATION_HAND+LOCATION_MZONE,0,nil,e)
+	local mg1=Duel.GetFusionMaterial(tp):Filter(c37630732.filter1,nil,e)
 	local sg1=Duel.GetMatchingGroup(c37630732.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg2=nil
 	local sg2=nil
@@ -70,21 +70,17 @@ function c37630732.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(tc:GetBaseAttack())
 		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e2:SetCode(EVENT_PHASE+PHASE_END)
-		e2:SetCountLimit(1)
-		e2:SetLabel(tc:GetBaseAttack())
-		e2:SetReset(RESET_PHASE+PHASE_END)
-		e2:SetOperation(c37630732.damop)
-		Duel.RegisterEffect(e2,tp)
-	elseif Duel.IsPlayerCanSpecialSummon(tp) then
-		local cg1=Duel.GetFieldGroup(tp,LOCATION_HAND+LOCATION_MZONE,0)
-		Duel.ConfirmCards(1-tp,cg1)
-		local cg2=Duel.GetFieldGroup(tp,LOCATION_EXTRA,0)
-		Duel.ConfirmCards(1-tp,cg2)
-		Duel.ShuffleHand(tp)
+		tc:RegisterEffect(e1,true)
+		if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+			e2:SetCode(EVENT_PHASE+PHASE_END)
+			e2:SetCountLimit(1)
+			e2:SetLabel(tc:GetBaseAttack())
+			e2:SetReset(RESET_PHASE+PHASE_END)
+			e2:SetOperation(c37630732.damop)
+			Duel.RegisterEffect(e2,tp)
+		end
 	end
 end
 function c37630732.damop(e,tp,eg,ep,ev,re,r,rp)

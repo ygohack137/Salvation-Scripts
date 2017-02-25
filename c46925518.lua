@@ -19,6 +19,7 @@ function c46925518.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_FLIP)
+	e2:SetTarget(c46925518.fdtg)
 	e3:SetOperation(c46925518.fdop)
 	c:RegisterEffect(e3)
 end
@@ -37,8 +38,12 @@ end
 function c46925518.posop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		Duel.ChangePosition(c,POS_FACEDOWN_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEDOWN_DEFENSE)
 	end
+end
+function c46925518.fdtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK)
 end
 function c46925518.fdop(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
@@ -47,7 +52,7 @@ function c46925518.fdop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCountLimit(1)
 	e1:SetCondition(c46925518.condition)
 	e1:SetOperation(c46925518.operation)
-	e1:SetReset(RESET_PHASE+RESET_END)
+	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
 function c46925518.filter(c)
@@ -62,14 +67,14 @@ end
 function c46925518.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c46925518.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if g:GetCount()==0 then return end
-	local ct=Duel.ChangePosition(g,POS_FACEDOWN_DEFENCE)
+	local ct=Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local sg=Duel.GetMatchingGroup(c46925518.spfilter,tp,LOCATION_DECK,0,nil,e,tp,ct)
 	if sg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(46925518,1)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tg=sg:Select(tp,1,1,nil)
-		if Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEDOWN_DEFENCE)~=0 then
+		if Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)~=0 then
 			Duel.ConfirmCards(1-tp,tg)
 		end
 	end

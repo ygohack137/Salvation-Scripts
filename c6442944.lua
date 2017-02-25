@@ -38,7 +38,6 @@ function c6442944.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c6442944.spfilter(c,e,tp)
 	return c:IsRace(RACE_SEASERPENT) and c:GetLevel()==8 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c6442944.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -48,7 +47,7 @@ end
 function c6442944.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c6442944.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c6442944.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -58,7 +57,7 @@ function c6442944.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1,true)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_SET_DEFENCE_FINAL)
+		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
 		tc:RegisterEffect(e2,true)
 		Duel.SpecialSummonComplete()
 	end

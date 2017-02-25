@@ -2,8 +2,10 @@
 function c22227683.initial_effect(c)
 	--atk/def up
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
+	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(c22227683.condition)
 	e1:SetTarget(c22227683.target)
 	e1:SetOperation(c22227683.operation)
@@ -19,13 +21,15 @@ function c22227683.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c22227683.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttackTarget()~=nil
+	return e:GetHandler():GetBattleTarget()~=nil
 end
 function c22227683.tgfilter(c)
 	return c:IsSetCard(0xab) and c:IsType(TYPE_MONSTER) and not c:IsCode(22227683) and c:IsAbleToGrave()
 end
 function c22227683.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c22227683.tgfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return e:GetHandler():GetFlagEffect(22227683)==0
+		and Duel.IsExistingMatchingCard(c22227683.tgfilter,tp,LOCATION_DECK,0,1,nil) end
+	e:GetHandler():RegisterFlagEffect(22227683,RESET_CHAIN,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function c22227683.operation(e,tp,eg,ep,ev,re,r,rp)
@@ -40,10 +44,10 @@ function c22227683.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(lv*500)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_DAMAGE_CAL)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL)
 		c:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		c:RegisterEffect(e2)
 	end
 	local e3=Effect.CreateEffect(c)
@@ -57,27 +61,29 @@ function c22227683.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c22227683.spfilter1(c,e,tp)
 	return c:IsSetCard(0xab) and c:IsType(TYPE_MONSTER)
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and Duel.IsExistingMatchingCard(c22227683.spfilter2,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,c,e,tp,c:GetLevel())
 end
 function c22227683.spfilter2(c,e,tp,lv)
 	return c:IsSetCard(0xab) and c:IsType(TYPE_MONSTER) and c:GetLevel()~=lv
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c22227683.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsExistingMatchingCard(c22227683.spfilter1,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_GRAVE+LOCATION_HAND)
 end
 function c22227683.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g1=Duel.SelectMatchingCard(tp,c22227683.spfilter1,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
+	local g1=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c22227683.spfilter1),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,e,tp)
 	if g1:GetCount()>0 then
 		local tc=g1:GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g2=Duel.SelectMatchingCard(tp,c22227683.spfilter2,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,tc,e,tp,tc:GetLevel())
+		local g2=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c22227683.spfilter2),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,tc,e,tp,tc:GetLevel())
 		g1:Merge(g2)
-		Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP_DEFENCE)
+		Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end

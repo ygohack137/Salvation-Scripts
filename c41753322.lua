@@ -47,12 +47,11 @@ end
 function c41753322.otfilter(c,tp)
 	return c:IsRace(RACE_DINOSAUR) and (c:IsControler(tp) or c:IsFaceup())
 end
-function c41753322.otcon(e,c)
+function c41753322.otcon(e,c,minc)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local mg=Duel.GetMatchingGroup(c41753322.otfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
-	return c:GetLevel()>6 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.GetTributeCount(c,mg)>0
+	return c:GetLevel()>6 and minc<=1 and Duel.CheckTribute(c,1,1,mg)
 end
 function c41753322.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c41753322.otfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
@@ -69,7 +68,7 @@ end
 function c41753322.posop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		Duel.ChangePosition(c,POS_FACEDOWN_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEDOWN_DEFENSE)
 	end
 end
 function c41753322.postg2(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -79,7 +78,7 @@ function c41753322.postg2(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c41753322.posop2(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsCanTurnSet,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
-	Duel.ChangePosition(g,POS_FACEDOWN_DEFENCE)
+	Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 end
 function c41753322.dcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

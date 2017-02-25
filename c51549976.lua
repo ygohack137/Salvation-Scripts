@@ -21,11 +21,11 @@ function c51549976.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c51549976.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,0,LOCATION_ONFIELD,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c51549976.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,0,LOCATION_ONFIELD,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)
 	Duel.Destroy(g,REASON_EFFECT)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -39,7 +39,7 @@ function c51549976.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function c51549976.actcon(e)
 	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE and ph<=PHASE_DAMAGE_CAL
+	return ph>PHASE_MAIN1 and ph<PHASE_MAIN2
 end
 function c51549976.aclimit(e,re,tp)
 	return re:GetHandler():IsType(TYPE_MONSTER) and re:GetHandler():IsLocation(LOCATION_HAND+LOCATION_GRAVE)

@@ -34,24 +34,14 @@ function c26775203.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c26775203.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-	end
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function c26775203.adchange(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ba=c:GetBaseAttack()
-	local bd=c:GetBaseDefence()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SET_BASE_ATTACK)
-	e1:SetValue(bd)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+	e1:SetCode(EFFECT_SWAP_BASE_AD)
+	e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_SET_BASE_DEFENCE)
-	e2:SetValue(ba)
-	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	c:RegisterEffect(e2)
 end

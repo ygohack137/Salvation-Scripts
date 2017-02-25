@@ -11,7 +11,7 @@ function c19230407.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c19230407.filter(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup()
 end
 function c19230407.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c19230407.filter(chkc) end
@@ -30,6 +30,10 @@ function c19230407.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EFFECT_SKIP_DP)
 	e1:SetTargetRange(1,0)
-	e1:SetReset(RESET_PHASE+PHASE_END,3)
+	if Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_DRAW then
+		e1:SetReset(RESET_PHASE+PHASE_DRAW+RESET_SELF_TURN,2)
+	else
+		e1:SetReset(RESET_PHASE+PHASE_DRAW+RESET_SELF_TURN)
+	end
 	Duel.RegisterEffect(e1,tp)
 end

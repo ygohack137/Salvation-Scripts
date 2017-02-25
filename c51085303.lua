@@ -18,12 +18,10 @@ function c51085303.initial_effect(c)
 	--
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
-	e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e3:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(c51085303.attg)
-	e3:SetValue(aux.imval1)
+	e3:SetTargetRange(0,LOCATION_MZONE)
+	e3:SetValue(c51085303.atlimit)
 	c:RegisterEffect(e3)
 end
 function c51085303.adcon(e,tp,eg,ep,ev,re,r,rp)
@@ -31,7 +29,7 @@ function c51085303.adcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c51085303.adop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and c:GetDefence()>=200 then
+	if c:IsRelateToEffect(e) and c:IsFaceup() and c:GetDefense()>=200 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -40,11 +38,11 @@ function c51085303.adop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1ff0000)
 		c:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		e2:SetValue(-200)
 		c:RegisterEffect(e2)
 	end
 end
-function c51085303.attg(e,c)
+function c51085303.atlimit(e,c)
 	return c:IsFacedown() or not c:IsCode(51085303)
 end

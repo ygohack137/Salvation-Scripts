@@ -9,7 +9,8 @@ function c67328336.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e2:SetRange(LOCATION_SZONE)
+	e2:SetRange(LOCATION_FZONE)
+	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x3013))
 	e2:SetValue(c67328336.effval)
@@ -27,14 +28,14 @@ function c67328336.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c67328336.effval(e,re,rp)
-	return re:GetHandler():IsType(TYPE_SYNCHRO) and aux.tgval(e,re,rp)
+	return re:GetHandler():IsType(TYPE_SYNCHRO)
 end
 function c67328336.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsReason(REASON_DESTROY) and bit.band(c:GetPreviousLocation(),LOCATION_ONFIELD)~=0
 end
 function c67328336.filter(c)
-	return c:IsSetCard(0x3013) and c:IsAbleToHand()
+	return c:IsSetCard(0x3013) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c67328336.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c67328336.filter,tp,LOCATION_DECK,0,1,nil) end

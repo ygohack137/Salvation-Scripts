@@ -22,7 +22,6 @@ function c23649496.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_TO_GRAVE)
-	e2:SetCondition(c23649496.tgcon)
 	e2:SetTarget(c23649496.tgtg)
 	e2:SetOperation(c23649496.tgop)
 	c:RegisterEffect(e2)
@@ -38,7 +37,7 @@ function c23649496.cfilter(c)
 	return c:IsFaceup() and Duel.IsExistingMatchingCard(c23649496.filter,0,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetCode())
 end
 function c23649496.filter(c,code)
-	return c:IsFaceup() and c:IsCode(code) and c:IsDestructable()
+	return c:IsFaceup() and c:IsCode(code)
 end
 function c23649496.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c23649496.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
@@ -74,11 +73,8 @@ end
 function c23649496.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsCode(e:GetLabel())
 end
-function c23649496.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsReason(REASON_RETURN)
-end
 function c23649496.tgfilter(c)
-	return c:IsSetCard(0x76) and c:IsAbleToGrave()
+	return c:IsSetCard(0x76) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c23649496.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c23649496.tgfilter,tp,LOCATION_DECK,0,2,nil) end

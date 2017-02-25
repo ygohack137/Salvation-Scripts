@@ -1,5 +1,6 @@
 --ワンダー・バルーン
 function c78574395.initial_effect(c)
+	c:EnableCounterPermit(0x32)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

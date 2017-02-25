@@ -17,6 +17,7 @@ function c99916754.initial_effect(c)
 	e2:SetOperation(c99916754.disop)
 	c:RegisterEffect(e2)
 end
+c99916754.miracle_synchro_fusion=true
 function c99916754.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 		and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
@@ -39,8 +40,7 @@ end
 function c99916754.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsFaceup() or not c:IsRelateToEffect(e) then return end
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

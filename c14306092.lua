@@ -1,5 +1,6 @@
 --牙鮫帝シャーク・カイゼル
 function c14306092.initial_effect(c)
+	c:EnableCounterPermit(0x2e)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,3,3,nil,nil,5)
 	c:EnableReviveLimit()

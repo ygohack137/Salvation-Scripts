@@ -22,10 +22,11 @@ function c28124263.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e3:SetCondition(c28124263.cond)
 	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x26))
-	e3:SetValue(aux.tgval)
+	e3:SetValue(1)
 	c:RegisterEffect(e3)
 end
 function c28124263.check(e,tp,eg,ep,ev,re,r,rp)
@@ -37,8 +38,8 @@ function c28124263.cona(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetLabelObject():GetLabel()==1
 end
 function c28124263.filter(c,e,tp)
-	return c:IsLevelBelow(4) and c:IsSetCard(0x26) and c:GetCode()~=28124263
-		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsLevelBelow(4) and c:IsSetCard(0x26) and not c:IsCode(28124263)
+		and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c28124263.tga(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -48,9 +49,9 @@ end
 function c28124263.opa(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c28124263.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c28124263.filter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 end
 function c28124263.cond(e)
-	return e:GetHandler():IsDefencePos()
+	return e:GetHandler():IsDefensePos()
 end

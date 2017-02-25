@@ -24,17 +24,21 @@ function c31111109.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e3:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e3:SetValue(c31111109.splimit)
+	e3:SetValue(aux.fuslimit)
 	c:RegisterEffect(e3)
+end
+c31111109.material_setcode=0x8
+function c31111109.ffilter(c,cat,fc)
+	return c:IsFusionSetCard(cat) and not c:IsHasEffect(6205579) and c:IsCanBeFusionMaterial(fc)
 end
 function c31111109.fuscon(e,g,gc,chkf)
 	if g==nil then return false end
 	if gc then return false end
-	local g1=g:Filter(Card.IsSetCard,nil,0x9)
+	local g1=g:Filter(c31111109.ffilter,nil,0x9,e:GetHandler())
 	local c1=g1:GetCount()
-	local g2=g:Filter(Card.IsSetCard,nil,0x1f)
+	local g2=g:Filter(c31111109.ffilter,nil,0x1f,e:GetHandler())
 	local c2=g2:GetCount()
-	local g3=g:Filter(Card.IsSetCard,nil,0x8)
+	local g3=g:Filter(c31111109.ffilter,nil,0x8,e:GetHandler())
 	local c3=g3:GetCount()
 	local ag=g1:Clone()
 	ag:Merge(g2)
@@ -44,9 +48,9 @@ function c31111109.fuscon(e,g,gc,chkf)
 end
 function c31111109.fusop(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
 	if gc then return end
-	local g1=eg:Filter(Card.IsSetCard,nil,0x9)
-	local g2=eg:Filter(Card.IsSetCard,nil,0x1f)
-	local g3=eg:Filter(Card.IsSetCard,nil,0x8)
+	local g1=eg:Filter(c31111109.ffilter,nil,0x9,e:GetHandler())
+	local g2=eg:Filter(c31111109.ffilter,nil,0x1f,e:GetHandler())
+	local g3=eg:Filter(c31111109.ffilter,nil,0x8,e:GetHandler())
 	local ag=g1:Clone()
 	ag:Merge(g2)
 	ag:Merge(g3)
@@ -79,12 +83,9 @@ function c31111109.fusop(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
 	end
 	Duel.SetFusionMaterial(mg)
 end
-function c31111109.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
-end
 function c31111109.filter(c)
 	return (c:IsSetCard(0x9) or c:IsSetCard(0x1f) or c:IsSetCard(0x8)) and c:IsType(TYPE_MONSTER)
-		and not c:IsHasEffect(EFFECT_FORBIDDEN) and c:IsAbleToRemove()
+		and not c:IsForbidden() and c:IsAbleToRemove()
 end
 function c31111109.copytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c31111109.filter(chkc) end
@@ -97,9 +98,9 @@ function c31111109.copyop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and c:IsFaceup() and tc:IsRelateToEffect(e) then
-		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=1 then	return end
+		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=1 then return end
 		local code=tc:GetOriginalCode()
-		local cid=c:CopyEffect(code,RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END,1)
+		local cid=c:CopyEffect(code,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
@@ -114,7 +115,7 @@ function c31111109.copyop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 		e2:SetCountLimit(1)
 		e2:SetRange(LOCATION_MZONE)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END)
+		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		e2:SetLabel(cid)
 		e2:SetOperation(c31111109.rstop)
 		c:RegisterEffect(e2)

@@ -1,12 +1,7 @@
 --妖仙獣 右鎌神柱
 function c91420254.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--scale change
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(91420254,0))
@@ -16,7 +11,7 @@ function c91420254.initial_effect(c)
 	e2:SetCondition(c91420254.sccon)
 	e2:SetOperation(c91420254.scop)
 	c:RegisterEffect(e2)
-	--to defence
+	--to defense
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(91420254,1))
 	e3:SetCategory(CATEGORY_POSITION)
@@ -28,12 +23,10 @@ function c91420254.initial_effect(c)
 	--cannot be battle target
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e4:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
-	e4:SetTarget(c91420254.bttg)
-	e4:SetValue(aux.imval1)
+	e4:SetTargetRange(0,LOCATION_MZONE)
+	e4:SetValue(c91420254.bttg)
 	c:RegisterEffect(e4)
 end
 function c91420254.sccon(e,tp,eg,ep,ev,re,r,rp)
@@ -72,9 +65,9 @@ end
 function c91420254.posop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsPosition(POS_FACEUP_ATTACK) and c:IsRelateToEffect(e) then
-		Duel.ChangePosition(c,POS_FACEUP_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
 	end
 end
 function c91420254.bttg(e,c)
-	return c:IsSetCard(0xb3) and c~=e:GetHandler()
+	return c:IsFaceup() and c:IsSetCard(0xb3) and c~=e:GetHandler()
 end

@@ -2,7 +2,7 @@
 function c22061412.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsSetCard,0x3008),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),true)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x3008),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_LIGHT),true)
 	--tohand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(22061412,0))
@@ -27,13 +27,10 @@ function c22061412.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e4:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e4:SetValue(c22061412.splimit)
+	e4:SetValue(aux.fuslimit)
 	c:RegisterEffect(e4)
-	c:EnableReviveLimit()
 end
-function c22061412.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
-end
+c22061412.material_setcode=0x8
 function c22061412.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x3008)
 end
@@ -44,7 +41,7 @@ function c22061412.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetPreviousLocation(),LOCATION_ONFIELD)>0
 end
 function c22061412.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x3008) and c:IsAbleToHand()
+	return c:IsFaceup() and c:IsSetCard(0x3008) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c22061412.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetControler()==tp and chkc:IsLocation(LOCATION_REMOVED) and c22061412.filter(chkc) end

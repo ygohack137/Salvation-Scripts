@@ -12,13 +12,13 @@ function c68334074.initial_effect(c)
 	e1:SetOperation(c68334074.activate)
 	c:RegisterEffect(e1)
 end
+c68334074.card_code_list={46986414}
 function c68334074.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,0,0x3001,2,REASON_COST) end
-	Duel.RemoveCounter(tp,1,0,0x3001,2,REASON_COST)
+	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,0,0x1,2,REASON_COST) end
+	Duel.RemoveCounter(tp,1,0,0x1,2,REASON_COST)
 end
 function c68334074.filter(c,e,tp)
-	local code=c:GetCode()
-	return (code==46986414 or code==78193831) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(46986414,78193831) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c68334074.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c68334074.filter(chkc,e,tp) end
@@ -26,7 +26,7 @@ function c68334074.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and Duel.IsExistingTarget(c68334074.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c68334074.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,g:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c68334074.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

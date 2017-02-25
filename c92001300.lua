@@ -1,6 +1,6 @@
 --古代の機械城
 function c92001300.initial_effect(c)
-	c:EnableCounterPermit(0x300b)
+	c:EnableCounterPermit(0xb)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -37,17 +37,16 @@ function c92001300.initial_effect(c)
 	e4:SetOperation(c92001300.sumop)
 	e4:SetValue(SUMMON_TYPE_ADVANCE)
 	c:RegisterEffect(e4)
-	local e5=e4:Clone()
-	e5:SetCode(EFFECT_SET_PROC)
-	c:RegisterEffect(e5)
 end
 function c92001300.addc(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(0x300b,1)
+	e:GetHandler():AddCounter(0xb,1)
 end
-function c92001300.sumcon(e,c)
+function c92001300.sumcon(e,c,minc)
 	if c==nil then return e:GetHandler():IsReleasable() end
 	local mi,ma=c:GetTributeRequirement()
-	return ma>0 and e:GetHandler():GetCounter(0x300b)>=mi and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
+	if mi<minc then mi=minc end
+	if ma<mi then return false end
+	return ma>0 and e:GetHandler():GetCounter(0xb)>=mi and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function c92001300.sumop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(e:GetHandler(),REASON_COST)

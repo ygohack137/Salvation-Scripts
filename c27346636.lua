@@ -2,7 +2,7 @@
 function c27346636.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,78868776,aux.FilterBoolFunction(Card.IsSetCard,0x19),2,true,true)
+	aux.AddFusionProcCodeFun(c,78868776,aux.FilterBoolFunction(Card.IsFusionSetCard,0x19),2,true,true)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -38,11 +38,11 @@ function c27346636.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c27346636.spfilter1(c,tp)
-	return c:IsCode(78868776) and c:IsAbleToDeckOrExtraAsCost() and c:IsCanBeFusionMaterial(true)
+	return c:IsFusionCode(78868776) and c:IsAbleToDeckOrExtraAsCost() and c:IsCanBeFusionMaterial()
 		and Duel.IsExistingMatchingCard(c27346636.spfilter2,tp,LOCATION_MZONE,0,2,c)
 end
 function c27346636.spfilter2(c)
-	return c:IsSetCard(0x19) and c:IsCanBeFusionMaterial() and c:IsAbleToDeckOrExtraAsCost()
+	return c:IsFusionSetCard(0x19) and c:IsCanBeFusionMaterial() and c:IsAbleToDeckOrExtraAsCost()
 end
 function c27346636.sprcon(e,c)
 	if c==nil then return true end 
@@ -81,8 +81,7 @@ end
 function c27346636.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsFaceup() or not c:IsRelateToEffect(e) then return end
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

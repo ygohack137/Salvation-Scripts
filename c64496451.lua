@@ -1,20 +1,14 @@
 --クリフォート・ディスク
 function c64496451.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--splimit
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetTargetRange(1,0)
-	e2:SetCondition(c64496451.splimcon)
 	e2:SetTarget(c64496451.splimit)
 	c:RegisterEffect(e2)
 	--atk up
@@ -30,7 +24,6 @@ function c64496451.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(64496451,0))
 	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e4:SetCode(EFFECT_SUMMON_PROC)
 	e4:SetCondition(c64496451.ntcon)
 	c:RegisterEffect(e4)
@@ -52,7 +45,7 @@ function c64496451.initial_effect(c)
 	e7:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_UNCOPYABLE)
 	e7:SetRange(LOCATION_MZONE)
 	e7:SetCondition(c64496451.immcon)
-	e7:SetValue(c64496451.efilter)
+	e7:SetValue(aux.qlifilter)
 	c:RegisterEffect(e7)
 	--summon success
 	local e8=Effect.CreateEffect(c)
@@ -71,9 +64,6 @@ function c64496451.initial_effect(c)
 	e9:SetValue(c64496451.valcheck)
 	e9:SetLabelObject(e8)
 	c:RegisterEffect(e9)
-end
-function c64496451.splimcon(e)
-	return not e:GetHandler():IsForbidden()
 end
 function c64496451.splimit(e,c)
 	return not c:IsSetCard(0xaa)
@@ -128,18 +118,6 @@ end
 function c64496451.immcon(e)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_NORMAL)==SUMMON_TYPE_NORMAL
 end
-function c64496451.efilter(e,te)
-	if te:IsActiveType(TYPE_MONSTER) and (te:IsHasType(0x7e0) or te:IsHasProperty(EFFECT_FLAG_FIELD_ONLY) or te:IsHasProperty(EFFECT_FLAG_OWNER_RELATE)) then
-		local lv=e:GetHandler():GetLevel()
-		local ec=te:GetOwner()
-		if ec:IsType(TYPE_XYZ) then
-			return ec:GetOriginalRank()<lv
-		else
-			return ec:GetOriginalLevel()<lv
-		end
-	end
-	return false
-end
 function c64496451.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_ADVANCE and e:GetLabel()==1
 end
@@ -147,11 +125,13 @@ function c64496451.spfilter(c,e,tp)
 	return c:IsSetCard(0xaa) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c64496451.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
 		and Duel.IsExistingMatchingCard(c64496451.spfilter,tp,LOCATION_DECK,0,2,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
 end
 function c64496451.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	local c=e:GetHandler()
 	local fid=c:GetFieldID()

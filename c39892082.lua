@@ -1,5 +1,6 @@
 --バルーン・リザード
 function c39892082.initial_effect(c)
+	c:EnableCounterPermit(0x29)
 	--counter
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(39892082,0))

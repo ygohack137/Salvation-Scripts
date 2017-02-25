@@ -1,12 +1,7 @@
 --DDD反骨王レオニダス
 function c92536468.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--reverse damage
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -35,6 +30,9 @@ function c92536468.initial_effect(c)
 	e4:SetTargetRange(1,0)
 	e4:SetValue(c92536468.damval)
 	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetCode(EFFECT_NO_EFFECT_DAMAGE)
+	c:RegisterEffect(e5)
 end
 function c92536468.effcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp and bit.band(r,REASON_EFFECT)~=0

@@ -17,7 +17,7 @@ function c60668166.condition(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and c:GetPreviousControler()==tp and bit.band(c:GetPreviousLocation(),LOCATION_ONFIELD)~=0
 end
 function c60668166.filter(c,e,tp)
-	return c:GetCode()==60668166 and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
+	return c:IsCode(60668166) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
 end
 function c60668166.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -26,15 +26,16 @@ function c60668166.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c60668166.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ct==0 then return end
+	if ct<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ct=1 end
 	local g=Duel.GetMatchingGroup(c60668166.filter,tp,LOCATION_DECK,0,nil,e,tp)
 	if g:GetCount()>0 then
 		local t1=g:GetFirst()
 		local t2=g:GetNext()
-		Duel.SpecialSummonStep(t1,0,tp,tp,false,false,POS_FACEDOWN_DEFENCE)
+		Duel.SpecialSummonStep(t1,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 		Duel.ConfirmCards(1-tp,t1)
 		if t2 and ct>1 and Duel.SelectYesNo(tp,aux.Stringid(60668166,1)) then
-			Duel.SpecialSummonStep(t2,0,tp,tp,false,false,POS_FACEDOWN_DEFENCE)
+			Duel.SpecialSummonStep(t2,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 			Duel.ConfirmCards(1-tp,t2)
 		end
 		Duel.SpecialSummonComplete()

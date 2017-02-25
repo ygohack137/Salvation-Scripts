@@ -23,7 +23,7 @@ function c81810441.initial_effect(c)
 	e3:SetValue(500)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
-	e4:SetCode(EFFECT_UPDATE_DEFENCE)
+	e4:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e4)
 	--immune
 	local e5=Effect.CreateEffect(c)
@@ -57,10 +57,10 @@ function c81810441.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c81810441.eqlimit(e,c)
-	return c:IsSetCard(0x9c)
+	return c:IsSetCard(0x9c) and c:GetControler()==e:GetHandler():GetControler()
 end
 function c81810441.efilter(e,re)
-	return e:GetHandlerPlayer()~=re:GetHandlerPlayer()
+	return e:GetHandlerPlayer()~=re:GetOwnerPlayer()
 end
 function c81810441.cfilter(c)
 	return c:IsFaceup() and not c:IsSetCard(0x9c)

@@ -16,7 +16,6 @@ function c23265594.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(c23265594.uncon)
 	e2:SetTarget(c23265594.sptg)
 	e2:SetOperation(c23265594.spop)
 	c:RegisterEffect(e2)
@@ -25,21 +24,18 @@ function c23265594.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_EQUIP)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetValue(500)
-	e3:SetCondition(c23265594.uncon)
 	c:RegisterEffect(e3)
 	--Def up
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_EQUIP)
-	e4:SetCode(EFFECT_UPDATE_DEFENCE)
+	e4:SetCode(EFFECT_UPDATE_DEFENSE)
 	e4:SetValue(500)
-	e4:SetCondition(c23265594.uncon)
 	c:RegisterEffect(e4)
 	--destroy sub
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_EQUIP)
 	e5:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e5:SetCode(EFFECT_DESTROY_SUBSTITUTE)
-	e5:SetCondition(c23265594.uncon)
 	e5:SetValue(1)
 	c:RegisterEffect(e5)
 	--eqlimit
@@ -50,14 +46,12 @@ function c23265594.initial_effect(c)
 	e6:SetValue(c23265594.eqlimit)
 	c:RegisterEffect(e6)
 end
-function c23265594.uncon(e)
-	return e:GetHandler():IsStatus(STATUS_UNION)
-end
 function c23265594.eqlimit(e,c)
-	return c:IsRace(RACE_MACHINE)
+	return c:IsRace(RACE_MACHINE) or e:GetHandler():GetEquipTarget()==c
 end
 function c23265594.filter(c)
-	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:GetUnionCount()==0
+	local ct1,ct2=c:GetUnionCount()
+	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and ct2==0
 end
 function c23265594.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c23265594.filter(chkc) end
@@ -77,7 +71,7 @@ function c23265594.eqop(e,tp,eg,ep,ev,re,r,rp)
 		return
 	end
 	if not Duel.Equip(tp,c,tc,false) then return end
-	c:SetStatus(STATUS_UNION,true)
+	aux.SetUnionState(c)
 end
 function c23265594.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(23265594)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -87,7 +81,6 @@ function c23265594.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c23265594.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP_ATTACK)
-	end
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)
 end

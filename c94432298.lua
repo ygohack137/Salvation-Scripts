@@ -34,9 +34,9 @@ function c94432298.tgtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	if Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_STANDBY
 		and Duel.IsExistingMatchingCard(c94432298.filter,tp,LOCATION_DECK,0,1,nil)
-		and Duel.SelectYesNo(tp,aux.Stringid(94432298,0)) then
+		and Duel.SelectYesNo(tp,94) then
 		e:SetCategory(CATEGORY_TOGRAVE)
-		e:GetHandler():RegisterFlagEffect(94432298,RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END,0,1)
+		e:GetHandler():RegisterFlagEffect(94432298,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 		e:GetHandler():RegisterFlagEffect(0,RESET_CHAIN,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(94432298,1))
 		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 	else
@@ -48,17 +48,16 @@ function c94432298.tgcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c94432298.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(94432298)==0 end
-	e:GetHandler():RegisterFlagEffect(94432298,RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END,0,1)
+	e:GetHandler():RegisterFlagEffect(94432298,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c94432298.filter(c)
-	return c:IsSetCard(0xbb) and c:IsAbleToGrave()
+	return c:IsSetCard(0xbb) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c94432298.tgtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c94432298.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function c94432298.tgop(e,tp,eg,ep,ev,re,r,rp)
-	if c94432298.sdcon(e) then return end
 	if e:GetHandler():GetFlagEffect(94432298)==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c94432298.filter,tp,LOCATION_DECK,0,1,2,nil)

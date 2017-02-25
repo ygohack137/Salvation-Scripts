@@ -12,8 +12,7 @@ function c87880531.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c87880531.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()~=1 and Duel.GetCurrentPhase()==PHASE_MAIN1
-		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_BP)
+	return Duel.IsAbleToEnterBP()
 end
 function c87880531.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) end
@@ -44,15 +43,6 @@ function c87880531.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_MUST_ATTACK)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_FIELD)
-		e2:SetCode(EFFECT_CANNOT_EP)
-		e2:SetRange(LOCATION_MZONE)
-		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e2:SetTargetRange(1,0)
-		e2:SetCondition(c87880531.becon)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e2)
 		local e3=Effect.CreateEffect(e:GetHandler())
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_ATTACK_ALL)
@@ -69,9 +59,6 @@ function c87880531.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function c87880531.ftarget(e,c)
 	return e:GetLabel()~=c:GetFieldID()
-end
-function c87880531.becon(e)
-	return e:GetHandler():IsAttackable()
 end
 function c87880531.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

@@ -1,21 +1,15 @@
 --秘竜星－セフィラシウゴ
 function c58990362.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--splimit
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e2:SetTargetRange(1,0)
 	e2:SetTarget(c58990362.splimit)
-	e2:SetCondition(c58990362.splimcon)
 	c:RegisterEffect(e2)
 	--search
 	local e3=Effect.CreateEffect(c)
@@ -36,9 +30,6 @@ end
 function c58990362.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0x9e) or c:IsSetCard(0xc4) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
-end
-function c58990362.splimcon(e)
-	return not e:GetHandler():IsForbidden()
 end
 function c58990362.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_PENDULUM

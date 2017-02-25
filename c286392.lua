@@ -25,6 +25,7 @@ function c286392.initial_effect(c)
 	e2:SetOperation(c286392.spop)
 	c:RegisterEffect(e2)
 end
+c286392.material_setcode=0x1017
 function c286392.tfilter(c)
 	return c:IsCode(9742784) or c:IsHasEffect(20932152)
 end
@@ -56,7 +57,7 @@ function c286392.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c286392.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENCE)~=0 then
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)

@@ -1,6 +1,6 @@
 --インフェルニティ・ネクロマンサー
 function c56209279.initial_effect(c)
-	--to defence
+	--to defense
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(56209279,0))
 	e1:SetCategory(CATEGORY_POSITION)
@@ -29,7 +29,7 @@ end
 function c56209279.poop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFaceup() and c:IsAttackPos() and c:IsRelateToEffect(e) then
-		Duel.ChangePosition(c,POS_FACEUP_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
 	end
 end
 function c56209279.spcon(e,tp,eg,ep,ev,re,r,rp)
@@ -44,7 +44,7 @@ function c56209279.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and Duel.IsExistingTarget(c56209279.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c56209279.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,g:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c56209279.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

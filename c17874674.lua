@@ -28,13 +28,14 @@ function c17874674.initial_effect(c)
 	e3:SetCondition(c17874674.condition)
 	e3:SetOperation(c17874674.ctarget)
 	c:RegisterEffect(e3)
-	--
+	--cost
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e4:SetCountLimit(1)
+	e4:SetCondition(c17874674.costcon)
 	e4:SetOperation(c17874674.costop)
 	c:RegisterEffect(e4)
 end
@@ -43,7 +44,7 @@ function c17874674.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return true end
 	if Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()==PHASE_STANDBY
 		and Duel.IsExistingTarget(aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-		and Duel.SelectYesNo(tp,aux.Stringid(17874674,2)) then
+		and Duel.SelectYesNo(tp,94) then
 		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		Duel.SelectTarget(tp,aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
@@ -92,11 +93,13 @@ function c17874674.ctarget(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetFirstCardTarget()
 	if tc then e:GetHandler():CancelCardTarget(tc) end
 end
+function c17874674.costcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
 function c17874674.costop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnPlayer()~=tp then return end
 	if Duel.CheckLPCost(tp,500) and Duel.SelectYesNo(tp,aux.Stringid(17874674,1)) then
 		Duel.PayLPCost(tp,500)
 	else
-		Duel.Destroy(e:GetHandler(),REASON_RULE)
+		Duel.Destroy(e:GetHandler(),REASON_COST)
 	end
 end

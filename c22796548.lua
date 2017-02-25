@@ -7,7 +7,7 @@ function c22796548.initial_effect(c)
 	--announce
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(22796548,0))
-	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DECKDES)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1)
@@ -25,14 +25,16 @@ function c22796548.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_DECK,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,0)
 	local ac=Duel.AnnounceCard(tp)
-	e:SetLabel(ac)
+	Duel.SetTargetParam(ac)
+	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD)
 end
 function c22796548.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) or not Duel.IsPlayerCanDiscardDeck(tp,1) then return end
 	Duel.ConfirmDecktop(tp,1)
 	local g=Duel.GetDecktopGroup(tp,1)
 	local tc=g:GetFirst()
-	if tc:GetCode()==e:GetLabel() and tc:IsAbleToHand() then
+	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+	if tc:IsCode(ac) and tc:IsAbleToHand() then
 		Duel.DisableShuffleCheck()
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ShuffleHand(tp)

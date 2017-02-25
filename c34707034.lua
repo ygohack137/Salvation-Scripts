@@ -16,7 +16,8 @@ function c34707034.filter(c,e,tp)
 end
 function c34707034.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c34707034.filter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>2
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>2
 		and Duel.IsExistingTarget(c34707034.filter,tp,LOCATION_GRAVE,0,3,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c34707034.filter,tp,LOCATION_GRAVE,0,3,3,nil,e,tp)
@@ -24,13 +25,13 @@ function c34707034.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c34707034.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	if g:GetCount()==0 then return end
+	if g:GetCount()==0 or (g:GetCount()>1 and Duel.IsPlayerAffectedByEffect(tp,59822133)) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<g:GetCount() then return end
 	local c=e:GetHandler()
 	local fid=c:GetFieldID()
 	local tc=g:GetFirst()
 	while tc do
-		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_DEFENCE)
+		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)

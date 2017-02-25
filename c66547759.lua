@@ -22,7 +22,7 @@ function c66547759.initial_effect(c)
 	--negate
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_NEGATE)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_F)
+	e3:SetType(EFFECT_TYPE_QUICK_F)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e3:SetRange(LOCATION_MZONE)
@@ -41,7 +41,7 @@ function c66547759.descon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp
 end
 function c66547759.filter(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup()
 end
 function c66547759.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and c66547759.filter(chkc) end
@@ -69,5 +69,7 @@ function c66547759.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 end
 function c66547759.disop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
+	if Duel.NegateActivation(ev) and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:GetHandler():IsRelateToEffect(re) then
+		Duel.SendtoGrave(eg,REASON_EFFECT)
+	end
 end

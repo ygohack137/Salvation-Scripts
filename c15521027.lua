@@ -14,6 +14,7 @@ function c15521027.initial_effect(c)
 	--tohand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(15521027,1))
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
@@ -71,7 +72,7 @@ function c15521027.opa(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ShuffleDeck(tp)
 end
 function c15521027.cond(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsDefencePos()
+	return e:GetHandler():IsDefensePos()
 end
 function c15521027.tgd(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>0 end

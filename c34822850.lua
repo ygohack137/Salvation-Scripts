@@ -27,15 +27,18 @@ function c34822850.initial_effect(c)
 	--cannot be target
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
+	e4:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
 	e4:SetRange(LOCATION_FZONE)
-	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e4:SetTarget(c34822850.tgtg)
-	e4:SetValue(aux.imval1)
+	e4:SetTargetRange(0,LOCATION_MZONE)
+	e4:SetValue(c34822850.atlimit)
 	c:RegisterEffect(e4)
-	local e5=e4:Clone()
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
 	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e5:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e5:SetRange(LOCATION_FZONE)
+	e5:SetTargetRange(LOCATION_MZONE,0)
+	e5:SetTarget(c34822850.tglimit)
 	e5:SetValue(aux.tgoval)
 	c:RegisterEffect(e5)
 end
@@ -61,6 +64,10 @@ end
 function c34822850.filter(c,lv)
 	return c:IsFaceup() and c:IsSetCard(0xbb) and c:GetLevel()>lv
 end
-function c34822850.tgtg(e,c)
-	return c:IsSetCard(0xbb) and Duel.IsExistingMatchingCard(c34822850.filter,c:GetControler(),LOCATION_MZONE,0,1,nil,c:GetLevel())
+function c34822850.atlimit(e,c)
+	return c:IsFaceup() and c:IsSetCard(0xbb) and Duel.IsExistingMatchingCard(c34822850.filter,c:GetControler(),LOCATION_MZONE,0,1,nil,c:GetLevel())
+end
+function c34822850.tglimit(e,c)
+	return c:IsSetCard(0xbb) 
+		and Duel.IsExistingMatchingCard(c34822850.filter,c:GetControler(),LOCATION_MZONE,0,1,nil,c:GetLevel())
 end

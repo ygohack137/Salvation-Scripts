@@ -16,7 +16,7 @@ function c24696097.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(24696097,1))
 	e2:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetCountLimit(1)
 	e2:SetRange(LOCATION_MZONE)
@@ -49,20 +49,30 @@ function c24696097.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c24696097.mtcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()~=1 and Duel.GetCurrentPhase()==PHASE_MAIN1
-		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_BP) and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=5
+	return Duel.IsAbleToEnterBP() and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=5
 end
 function c24696097.mtop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	Duel.ConfirmDecktop(tp,5)
 	local g=Duel.GetDecktopGroup(tp,5)
 	local ct=g:FilterCount(Card.IsType,nil,TYPE_TUNER)
 	Duel.ShuffleDeck(tp)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_EXTRA_ATTACK)
-	e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-	e1:SetValue(ct-1)
-	e:GetHandler():RegisterEffect(e1)
+	if ct>1 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_EXTRA_ATTACK)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetValue(ct-1)
+		c:RegisterEffect(e1)
+	elseif ct==0 then
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_CANNOT_ATTACK)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e2)
+	end
 end
 function c24696097.discon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
@@ -79,8 +89,7 @@ function c24696097.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c24696097.disop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateEffect(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
@@ -94,13 +103,12 @@ function c24696097.datg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetCard(Duel.GetAttacker())
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetHandler(),1,0,0)
 end
-function c24696097.daop(e,tp,eg,ep,ev,re,r,rp,chk)
+function c24696097.daop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
+	if c:IsRelateToEffect(e) and Duel.Remove(c,POS_FACEUP,REASON_EFFECT)~=0 then
+		Duel.NegateAttack()
+		c:RegisterFlagEffect(24696097,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
 	end
-	Duel.NegateAttack()
-	c:RegisterFlagEffect(24696097,RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END,0,0)
 end
 function c24696097.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -109,7 +117,7 @@ function c24696097.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c24696097.sumop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
-		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
-	end
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end

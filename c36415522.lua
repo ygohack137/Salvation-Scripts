@@ -93,14 +93,15 @@ function c36415522.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c36415522.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	if tc:IsRelateToBattle() and tc:IsFaceup() then
+	if tc:IsRelateToBattle() then
 		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetTargetRange(1,0)
 		e1:SetValue(1)
 		e1:SetCondition(c36415522.damcon)
-		e1:SetReset(RESET_PHASE+RESET_DAMAGE_CAL)
+		e1:SetReset(RESET_PHASE+PHASE_DAMAGE_CAL)
 		e1:SetLabelObject(tc)
 		Duel.RegisterEffect(e1,tp)
 	end

@@ -1,5 +1,6 @@
 --巨大戦艦 テトラン
 function c44954628.initial_effect(c)
+	c:EnableCounterPermit(0x1f)
 	--summon success
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(44954628,0))
@@ -82,7 +83,7 @@ function c44954628.descost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveCounter(tp,0x1f,1,REASON_COST)
 end
 function c44954628.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c44954628.destg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c44954628.filter(chkc) end

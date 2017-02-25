@@ -1,12 +1,7 @@
 --妖仙獣 左鎌神柱
 function c65025250.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--destroy replace
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
@@ -16,7 +11,7 @@ function c65025250.initial_effect(c)
 	e2:SetValue(c65025250.repval)
 	e2:SetOperation(c65025250.repop)
 	c:RegisterEffect(e2)
-	--to defence
+	--to defense
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(65025250,0))
 	e3:SetCategory(CATEGORY_POSITION)
@@ -29,9 +24,9 @@ function c65025250.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e4:SetTarget(c65025250.tgtg)
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
@@ -57,9 +52,9 @@ end
 function c65025250.posop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsPosition(POS_FACEUP_ATTACK) and c:IsRelateToEffect(e) then
-		Duel.ChangePosition(c,POS_FACEUP_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
 	end
 end
 function c65025250.tgtg(e,c)
-	return c:IsSetCard(0xb3) and c~=e:GetHandler()
+	return c~=e:GetHandler() and c:IsSetCard(0xb3)
 end

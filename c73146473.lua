@@ -15,9 +15,7 @@ function c73146473.initial_effect(c)
 	e2:SetDescription(aux.Stringid(73146473,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_TO_GRAVE)
-	e2:SetCondition(c73146473.thcon)
 	e2:SetTarget(c73146473.thtg)
 	e2:SetOperation(c73146473.thop)
 	c:RegisterEffect(e2)
@@ -43,12 +41,8 @@ function c73146473.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c73146473.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.BreakEffect()
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
-end
-function c73146473.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsReason(REASON_RETURN)
 end
 function c73146473.sfilter(c)
 	return c:IsSetCard(0x1f) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

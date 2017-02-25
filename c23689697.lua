@@ -34,11 +34,10 @@ end
 function c23689697.otfilter(c)
 	return bit.band(c:GetSummonType(),SUMMON_TYPE_ADVANCE)==SUMMON_TYPE_ADVANCE
 end
-function c23689697.otcon(e,c)
+function c23689697.otcon(e,c,minc)
 	if c==nil then return true end
 	local mg=Duel.GetMatchingGroup(c23689697.otfilter,0,LOCATION_MZONE,LOCATION_MZONE,nil)
-	return c:GetLevel()>6 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-1
-		and Duel.GetTributeCount(c,mg)>0
+	return c:GetLevel()>6 and minc<=1 and Duel.CheckTribute(c,1,1,mg)
 end
 function c23689697.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c23689697.otfilter,0,LOCATION_MZONE,LOCATION_MZONE,nil)
@@ -50,7 +49,7 @@ function c23689697.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_ADVANCE
 end
 function c23689697.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c23689697.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c23689697.filter(chkc) end

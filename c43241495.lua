@@ -1,12 +1,7 @@
 --EMトランポリンクス
 function c43241495.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--tohand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(43241495,0))
@@ -32,7 +27,7 @@ function c43241495.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c43241495.cfilter(c,tp)
-	return c:IsControler(tp) and c:GetSummonType()==SUMMON_TYPE_PENDULUM
+	return c:GetSummonPlayer()==tp and c:GetSummonType()==SUMMON_TYPE_PENDULUM
 end
 function c43241495.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c43241495.cfilter,1,nil,tp)

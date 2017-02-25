@@ -2,7 +2,7 @@
 function c45170821.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x8),2,true)
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x8),2,true)
 	--summon success
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(45170821,0))
@@ -14,6 +14,7 @@ function c45170821.initial_effect(c)
 	e2:SetOperation(c45170821.valop)
 	c:RegisterEffect(e2)
 end
+c45170821.material_setcode=0x8
 function c45170821.sfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x8)
 end
@@ -41,7 +42,7 @@ function c45170821.valop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(val)
 		o:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		o:RegisterEffect(e2)
 	end
 end

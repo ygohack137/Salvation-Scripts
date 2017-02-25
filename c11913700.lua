@@ -34,10 +34,10 @@ function c11913700.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c11913700.eqlimit(e,c)
-	return c:IsSetCard(0x9) and c:IsType(TYPE_FUSION) and not c:IsCode(31111109)
+	return aux.IsMaterialListCode(c,89943723)
 end
 function c11913700.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x9) and c:IsType(TYPE_FUSION) and not c:IsCode(31111109)
+	return c:IsFaceup() and aux.IsMaterialListCode(c,89943723)
 end
 function c11913700.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c11913700.filter(chkc) end
@@ -54,10 +54,10 @@ function c11913700.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c11913700.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetPreviousEquipTarget()
-	return e:GetHandler():IsReason(REASON_LOST_TARGET) and not ec:IsOnField()
+	return e:GetHandler():IsReason(REASON_LOST_TARGET) and not ec:IsLocation(LOCATION_ONFIELD+LOCATION_OVERLAY)
 end
 function c11913700.spfilter(c,e,tp)
-	return c:IsCode(89943723) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsCode(89943723) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c11913700.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -67,7 +67,7 @@ end
 function c11913700.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c11913700.spfilter,tp,0x13,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c11913700.spfilter),tp,0x13,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end

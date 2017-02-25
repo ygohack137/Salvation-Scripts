@@ -1,11 +1,12 @@
 --クリアー・バイス・ドラゴン
 function c97811903.initial_effect(c)
+	--atk
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetCondition(c97811903.condtion)
+	e1:SetCondition(c97811903.atkcon)
 	e1:SetValue(c97811903.atkval)
 	c:RegisterEffect(e1)
 	--
@@ -25,9 +26,9 @@ function c97811903.initial_effect(c)
 	e3:SetCode(97811903)
 	c:RegisterEffect(e3)
 end
-function c97811903.condtion(e)
+function c97811903.atkcon(e)
 	return Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL
-		and Duel.GetAttacker()==e:GetHandler() and Duel.GetAttackTarget()~=nil
+		and e:GetHandler()==Duel.GetAttacker() and Duel.GetAttackTarget()
 end
 function c97811903.atkval(e,c)
 	return Duel.GetAttackTarget():GetAttack()*2

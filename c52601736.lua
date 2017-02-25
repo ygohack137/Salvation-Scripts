@@ -27,7 +27,7 @@ function c52601736.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c52601736.filter(c)
-	return c:IsSetCard(0x56) and c:IsType(TYPE_MONSTER) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsSetCard(0x56) and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
 end
 function c52601736.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
@@ -39,7 +39,7 @@ function c52601736.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectMatchingCard(tp,c52601736.filter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c52601736.filter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
 		if not Duel.Equip(tp,tc,c,true) then return end
@@ -56,7 +56,7 @@ function c52601736.eqlimit(e,c)
 end
 function c52601736.dacon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetEquipTarget()
-	return Duel.GetTurnCount()~=1 and Duel.GetCurrentPhase()==PHASE_MAIN1
+	return Duel.IsAbleToEnterBP()
 		and tc:IsAttackable() and tc:GetEffectCount(EFFECT_DIRECT_ATTACK)==0
 end
 function c52601736.ftarget(e,c)

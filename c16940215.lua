@@ -17,10 +17,13 @@ end
 function c16940215.discon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
 end
+function c16940215.cfilter(c)
+	return c:IsSetCard(0x2a) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
+end
 function c16940215.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsReleasable() and Duel.CheckReleaseGroup(tp,Card.IsSetCard,1,c,0x2a) end
-	local g=Duel.SelectReleaseGroup(tp,Card.IsSetCard,1,1,c,0x2a)
+	if chk==0 then return c:IsReleasable() and not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.CheckReleaseGroup(tp,c16940215.cfilter,1,c) end
+	local g=Duel.SelectReleaseGroup(tp,c16940215.cfilter,1,1,c)
 	g:AddCard(c)
 	Duel.Release(g,REASON_COST)
 end
@@ -32,8 +35,7 @@ function c16940215.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c16940215.disop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

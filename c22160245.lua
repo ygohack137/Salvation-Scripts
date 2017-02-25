@@ -10,7 +10,7 @@ function c22160245.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e1:SetValue(c22160245.splimit)
 	c:RegisterEffect(e1)
-    --damage
+	--damage
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(22160245,0))
 	e2:SetCategory(CATEGORY_DAMAGE)
@@ -27,6 +27,8 @@ function c22160245.initial_effect(c)
 	e3:SetCode(EFFECT_PIERCE)
 	c:RegisterEffect(e3)
 end
+c22160245.material_setcode=0x8
+c22160245.dark_calling=true
 function c22160245.splimit(e,se,sp,st)
 	return st==SUMMON_TYPE_FUSION+0x10
 end
@@ -35,7 +37,7 @@ function c22160245.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
 	local dam=bc:GetAttack()
-	if bc:GetAttack() < bc:GetDefence() then dam=bc:GetDefence() end
+	if bc:GetAttack() < bc:GetDefense() then dam=bc:GetDefense() end
 	if dam<0 then dam=0 end
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(dam)

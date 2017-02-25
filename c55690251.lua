@@ -23,7 +23,7 @@ function c55690251.initial_effect(c)
 	--send to grave
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(55690251,1))
-	e4:SetCategory(CATEGORY_REMOVE)
+	e4:SetCategory(CATEGORY_TOGRAVE)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetCountLimit(1)
@@ -35,11 +35,11 @@ end
 function c55690251.otfilter(c,tp)
 	return c:IsRace(RACE_FAIRY) and (c:IsControler(tp) or c:IsFaceup())
 end
-function c55690251.otcon(e,c)
+function c55690251.otcon(e,c,minc)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local mg=Duel.GetMatchingGroup(c55690251.otfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
-	return c:GetLevel()>6 and Duel.GetTributeCount(c,mg)>0
+	return c:GetLevel()>6 and minc<=1 and Duel.CheckTribute(c,1,1,mg)
 end
 function c55690251.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c55690251.otfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
@@ -66,7 +66,7 @@ function c55690251.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(-1000)
 		c:RegisterEffect(e1)
-		if tc and tc:IsRelateToEffect(e) then
+		if tc and tc:IsRelateToEffect(e) and not c:IsHasEffect(EFFECT_REVERSE_UPDATE) then
 			Duel.SendtoGrave(tc,REASON_EFFECT)
 		end
 	end

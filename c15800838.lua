@@ -15,21 +15,17 @@ function c15800838.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(nil,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,564)
 	local ac=Duel.AnnounceCard(tp)
-	e:SetLabel(ac)
-	e:GetHandler():SetHint(CHINT_CARD,ac)
+	Duel.SetTargetParam(ac)
+	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD)
 end
 function c15800838.operation(e,tp,eg,ep,ev,re,r,rp)
-	local ac=e:GetLabel()
+	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_HAND,nil,ac)
-	local hg=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
-	Duel.ConfirmCards(tp,hg)
 	if g:GetCount()>0 then
 		Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
-		Duel.ShuffleHand(1-tp)
 	else
 		local sg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 		local dg=sg:RandomSelect(tp,1)
 		Duel.SendtoGrave(dg,REASON_EFFECT+REASON_DISCARD)
-		Duel.ShuffleHand(1-tp)
 	end
 end

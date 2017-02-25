@@ -22,15 +22,14 @@ function c22747316.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c22747316.filter(c,code)
-	return c:IsCode(code) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsCode(code) and c:IsAbleToHand()
 end
 function c22747316.activate(e,tp,eg,ep,ev,re,r,rp)
 	local code=re:GetHandler():GetCode()
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
-	local g=Duel.GetMatchingGroup(c22747316.filter,tp,LOCATION_GRAVE,0,nil,code)
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c22747316.filter),tp,LOCATION_GRAVE,0,nil,code)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(22747316,0)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)

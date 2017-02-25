@@ -25,16 +25,18 @@ function c90440725.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,90440725,0,0x21,-2,-2,4,RACE_MACHINE,ATTRIBUTE_EARTH) then return end
-	c:AddTrapMonsterAttribute(TYPE_EFFECT,ATTRIBUTE_EARTH,RACE_MACHINE,4,-2,-2)
-	Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)
-	c:TrapMonsterBlock()
+	c:AddMonsterAttribute(TYPE_EFFECT+TYPE_TRAP)
+	Duel.SpecialSummonStep(c,0,tp,tp,true,false,POS_FACEUP)
+	c:AddMonsterAttributeComplete()
 	--cannot attack
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_BE_BATTLE_TARGET)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCondition(c90440725.atkcon)
 	e1:SetOperation(c90440725.atkop)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,true)
 	--turn set
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(90440725,0))
@@ -46,20 +48,24 @@ function c90440725.activate(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetTarget(c90440725.settg)
 	e2:SetOperation(c90440725.setop)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e2,true)
+	Duel.SpecialSummonComplete()
+end
+function c90440725.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetAttacker():IsControler(1-tp) and Duel.GetAttackTarget()==e:GetHandler()
 end
 function c90440725.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SET_ATTACK)
+	e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 	e1:SetValue(Duel.GetAttacker():GetAttack())
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SET_DEFENCE)
-	e1:SetValue(Duel.GetAttacker():GetDefence())
+	e1:SetCode(EFFECT_SET_DEFENSE_FINAL)
+	e1:SetValue(Duel.GetAttacker():GetDefense())
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
 end
@@ -73,6 +79,6 @@ end
 function c90440725.setop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsLocation(LOCATION_MZONE) then
-		Duel.ChangePosition(c,POS_FACEDOWN_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEDOWN_DEFENSE)
 	end
 end

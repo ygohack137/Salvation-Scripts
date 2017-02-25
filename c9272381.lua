@@ -33,7 +33,7 @@ function c9272381.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(9272381,1))
 	e4:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
@@ -64,8 +64,7 @@ function c9272381.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c9272381.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

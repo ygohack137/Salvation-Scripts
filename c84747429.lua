@@ -23,7 +23,7 @@ function c84747429.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c84747429.filter(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup()
 end
 function c84747429.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and c84747429.filter(chkc) end
@@ -43,13 +43,15 @@ function c84747429.desop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 		e1:SetCountLimit(1)
 		e1:SetLabelObject(c)
+		e1:SetCondition(c84747429.retcon)
 		e1:SetOperation(c84747429.retop)
 		e1:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN)
 		Duel.RegisterEffect(e1,tp)
 	end
 end
+function c84747429.retcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
 function c84747429.retop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnPlayer()==tp then
-		Duel.ReturnToField(e:GetLabelObject())
-	end
+	Duel.ReturnToField(e:GetLabelObject())
 end

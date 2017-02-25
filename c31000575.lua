@@ -2,7 +2,7 @@
 function c31000575.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c31000575.target)
@@ -20,9 +20,12 @@ function c31000575.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsSummonableCard() and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) then
 		Duel.DisableShuffleCheck()
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-	else
+	elseif tc:IsAbleToHand() then
 		Duel.DisableShuffleCheck()
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ShuffleHand(1-tp)
+	else
+		Duel.DisableShuffleCheck()
+		Duel.SendtoGrave(tc,REASON_RULE)
 	end
 end

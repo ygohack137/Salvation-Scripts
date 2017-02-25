@@ -1,21 +1,14 @@
 --DD魔導賢者ガリレイ
 function c74605254.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(74605254,1))
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--splimit
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e2:SetTargetRange(1,0)
-	e2:SetCondition(c74605254.splimcon)
 	e2:SetTarget(c74605254.splimit)
 	c:RegisterEffect(e2)
 	--scale change
@@ -43,9 +36,6 @@ function c74605254.initial_effect(c)
 	e4:SetOperation(c74605254.thop)
 	c:RegisterEffect(e4)
 end
-function c74605254.splimcon(e)
-	return not e:GetHandler():IsForbidden()
-end
 function c74605254.splimit(e,c,sump,sumtype,sumpos,targetp)
 	return not c:IsSetCard(0xaf) and bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
@@ -53,7 +43,7 @@ function c74605254.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c74605254.filter(c,lv)
-	return c:IsFaceup() and not c:IsSetCard(0xaf) and c:IsLevelBelow(lv) and c:IsDestructable()
+	return c:IsFaceup() and not c:IsSetCard(0xaf) and c:IsLevelBelow(lv)
 end
 function c74605254.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -77,7 +67,7 @@ function c74605254.scop(e,tp,eg,ep,ev,re,r,rp)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_UPDATE_RSCALE)
 	c:RegisterEffect(e2)
-	local g=Duel.GetMatchingGroup(c74605254.filter,tp,LOCATION_MZONE,0,nil,scl)
+	local g=Duel.GetMatchingGroup(c74605254.filter,tp,LOCATION_MZONE,0,nil,c:GetLeftScale())
 	if g:GetCount()>0 then
 		Duel.BreakEffect()
 		Duel.Destroy(g,REASON_EFFECT)

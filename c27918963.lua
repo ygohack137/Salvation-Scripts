@@ -1,5 +1,6 @@
 --修験の妖社
 function c27918963.initial_effect(c)
+	c:EnableCounterPermit(0x33)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -40,7 +41,7 @@ function c27918963.filter1(c)
 	return c:IsFaceup() and c:IsSetCard(0xb3)
 end
 function c27918963.filter2(c)
-	return c:IsSetCard(0xb3) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsSetCard(0xb3) and c:IsAbleToHand()
 end
 function c27918963.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=e:GetHandler():IsCanRemoveCounter(tp,0x33,1,REASON_COST)
@@ -61,7 +62,7 @@ function c27918963.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetCategory(CATEGORY_ATKCHANGE)
 		e:GetHandler():RemoveCounter(tp,0x33,1,REASON_COST)
 	else
-		e:SetCategory(CATEGORY_TOHAND)
+		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 		e:GetHandler():RemoveCounter(tp,0x33,3,REASON_COST)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 	end
@@ -77,13 +78,13 @@ function c27918963.operation(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
 			e1:SetValue(300)
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END)
+			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1)
 			tc=g:GetNext()
 		end
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,c27918963.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c27918963.filter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)

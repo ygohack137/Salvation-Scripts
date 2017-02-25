@@ -22,7 +22,7 @@ function c75253697.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
 end
 function c75253697.dfilter(c,pos)
-	return c:IsPosition(pos) and c:IsDestructable()
+	return c:IsPosition(pos)
 end
 function c75253697.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -47,7 +47,7 @@ function c75253697.desop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetTargetRange(0,1)
 	e1:SetValue(c75253697.val)
-	e1:SetReset(RESET_PHASE+PHASE_END,1)
+	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
 function c75253697.val(e,re,dam,r,rp,rc)

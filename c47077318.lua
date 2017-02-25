@@ -3,6 +3,7 @@ function c47077318.initial_effect(c)
 	--deck check
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(47077318,0))
+	e1:SetCategory(CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_TO_GRAVE)
@@ -43,8 +44,7 @@ function c47077318.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c47077318.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_DECK) and
-		(c:IsReason(REASON_REVEAL) or c:GetPreviousPosition()==POS_FACEUP_DEFENCE or Duel.IsPlayerAffectedByEffect(tp,EFFECT_REVERSE_DECK))
+	return c:IsPreviousLocation(LOCATION_DECK) and c:IsReason(REASON_REVEAL)
 end
 function c47077318.filter(c)
 	return c:IsFaceup() and c:IsRace(RACE_PLANT)
@@ -60,7 +60,7 @@ function c47077318.tdop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		tc:RegisterEffect(e2)
 		tc=g:GetNext()
 	end

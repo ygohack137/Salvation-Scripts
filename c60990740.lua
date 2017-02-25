@@ -2,6 +2,7 @@
 function c60990740.initial_effect(c)
 	--sset
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_GRAVE)
@@ -17,7 +18,6 @@ function c60990740.initial_effect(c)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,60990741)
-	e2:SetCondition(c60990740.sdcon)
 	e2:SetTarget(c60990740.sdtg)
 	e2:SetOperation(c60990740.sdop)
 	c:RegisterEffect(e2)
@@ -51,11 +51,8 @@ function c60990740.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoGrave(tc,REASON_EFFECT+REASON_REVEAL)
 	end
 end
-function c60990740.sdcon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsReason(REASON_RETURN)
-end
 function c60990740.sdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>2 end
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>2 end
 end
 function c60990740.sdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SortDecktop(tp,tp,3)

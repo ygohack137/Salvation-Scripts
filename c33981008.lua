@@ -10,7 +10,7 @@ function c33981008.initial_effect(c)
 	e2:SetDescription(aux.Stringid(33981008,0))
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetRange(LOCATION_SZONE)
+	e2:SetRange(LOCATION_FZONE)
 	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e2:SetCountLimit(1)
 	e2:SetCondition(c33981008.drcon)
@@ -47,8 +47,8 @@ function c33981008.drop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectMatchingCard(tp,c33981008.filter,tp,LOCATION_GRAVE,0,1,1,nil)
+	Duel.HintSelection(g)
 	if g:GetCount()>0 and Duel.SendtoDeck(g,nil,1,REASON_EFFECT)>0 then
-		Duel.ConfirmCards(1-tp,g)
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end

@@ -2,7 +2,9 @@
 function c58551308.initial_effect(c)
 	--flip effect
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_FLIP)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetOperation(c58551308.flipop)
 	c:RegisterEffect(e1)
 	--special summon
@@ -19,7 +21,7 @@ end
 function c58551308.flipop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) then
-		c:RegisterFlagEffect(58551308,RESET_EVENT+0x57a0000,0,0)
+		c:RegisterFlagEffect(58551308,RESET_EVENT+0x57a0000,0,1)
 	end
 end
 function c58551308.filter(c,e,tp)
@@ -51,7 +53,7 @@ function c58551308.spop(e,tp,eg,ep,ev,re,r,rp)
 		local sp=tc:GetControler()
 		local spos=0
 		if tc:IsCanBeSpecialSummoned(e,0,sp,false,false) then spos=spos+POS_FACEUP_ATTACK end
-		if tc:IsCanBeSpecialSummoned(e,0,sp,false,false,POS_FACEDOWN) then spos=spos+POS_FACEDOWN_DEFENCE end
+		if tc:IsCanBeSpecialSummoned(e,0,sp,false,false,POS_FACEDOWN) then spos=spos+POS_FACEDOWN_DEFENSE end
 		if spos~=0 then Duel.SpecialSummonStep(tc,0,sp,sp,false,false,spos) end
 	end
 	tc=sg:GetNext()
@@ -59,7 +61,7 @@ function c58551308.spop(e,tp,eg,ep,ev,re,r,rp)
 		local sp=tc:GetControler()
 		local spos=0
 		if tc:IsCanBeSpecialSummoned(e,0,sp,false,false) then spos=spos+POS_FACEUP_ATTACK end
-		if tc:IsCanBeSpecialSummoned(e,0,sp,false,false,POS_FACEDOWN) then spos=spos+POS_FACEDOWN_DEFENCE end
+		if tc:IsCanBeSpecialSummoned(e,0,sp,false,false,POS_FACEDOWN) then spos=spos+POS_FACEDOWN_DEFENSE end
 		if spos~=0 then Duel.SpecialSummonStep(tc,0,sp,sp,false,false,spos) end
 	end
 	Duel.SpecialSummonComplete()

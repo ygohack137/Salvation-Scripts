@@ -4,7 +4,7 @@ function c33883834.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(33883834,0))
 	e1:SetCategory(CATEGORY_ATKCHANGE)
-	e1:SetType(EFFECT_TYPE_QUICK_O+EFFECT_TYPE_FIELD)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e1:SetCondition(c33883834.con)
@@ -21,7 +21,7 @@ end
 function c33883834.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
-	Duel.RegisterFlagEffect(tp,33883834,RESET_PHASE+RESET_DAMAGE_CAL,0,1)
+	Duel.RegisterFlagEffect(tp,33883834,RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
 function c33883834.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetAttacker()

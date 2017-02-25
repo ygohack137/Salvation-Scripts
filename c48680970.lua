@@ -10,7 +10,6 @@ function c48680970.initial_effect(c)
 	c:RegisterEffect(e1)
 	--instant
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
@@ -38,11 +37,12 @@ function c48680970.initial_effect(c)
 	e4:SetOperation(c48680970.desop)
 	c:RegisterEffect(e4)
 end
+c48680970.card_code_list={46986414}
 function c48680970.filter1(c,e,tp)
-	return c:IsCode(46986414) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsCode(46986414) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c48680970.filter2(c)
-	return (c:IsCode(2314238) or c:IsCode(63391643)) and c:IsAbleToHand()
+	return c:IsCode(2314238,63391643) and c:IsAbleToHand()
 end
 function c48680970.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -75,7 +75,7 @@ function c48680970.operation(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==0 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,c48680970.filter1,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c48680970.filter1),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end
@@ -107,16 +107,18 @@ function c48680970.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	e:SetLabel(op)
 	if op==0 then
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 	else
+		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	end
 end
 function c48680970.etarget(e,c)
 	return c:IsCode(46986414)
 end
-function c48680970.efilter(e,re,rp)
-	return re:GetHandlerPlayer()~=e:GetHandlerPlayer()
+function c48680970.efilter(e,re)
+	return re:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
 function c48680970.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -124,10 +126,10 @@ function c48680970.descon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c48680970.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c48680970.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,0,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,nil)
 	Duel.Destroy(g,REASON_EFFECT)
 end

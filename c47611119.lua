@@ -3,7 +3,7 @@ function c47611119.initial_effect(c)
 	c:SetSPSummonOnce(47611119)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,99645428,aux.FilterBoolFunction(Card.IsSetCard,0x1047),1,false,false)
+	aux.AddFusionProcCodeFun(c,99645428,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1047),1,false,false)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -13,7 +13,7 @@ function c47611119.initial_effect(c)
 	c:RegisterEffect(e1)
 	--damage
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_DAMAGE)
+	e2:SetCategory(CATEGORY_DAMAGE+CATEGORY_DECKDES)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetRange(LOCATION_MZONE)

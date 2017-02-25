@@ -16,19 +16,21 @@ function c30069398.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c30069398.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0 then return end
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,30069399,0,0x4011,0,0,1,RACE_PLANT,ATTRIBUTE_EARTH,POS_FACEUP_DEFENCE,1-tp) then return end
+	if not Duel.IsPlayerCanSpecialSummonMonster(tp,30069399,0,0x4011,0,0,1,RACE_PLANT,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE,1-tp) then return end
 	local token=Duel.CreateToken(tp,30069399)
-	if Duel.SpecialSummonStep(token,0,tp,1-tp,false,false,POS_FACEUP_DEFENCE) then
+	if Duel.SpecialSummonStep(token,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_DESTROY)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EVENT_LEAVE_FIELD)
 		e1:SetOperation(c30069398.damop)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
 		token:RegisterEffect(e1,true)
 	end
 	Duel.SpecialSummonComplete()
 end
 function c30069398.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Damage(tp,300,REASON_EFFECT)
+	local c=e:GetHandler()
+	if c:IsReason(REASON_DESTROY) then
+		Duel.Damage(c:GetPreviousControler(),300,REASON_EFFECT)
+	end
+	e:Reset()
 end

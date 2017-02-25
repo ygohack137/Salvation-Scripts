@@ -40,11 +40,16 @@ function c52709508.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if bit.band(att,ATTRIBUTE_EARTH)~=0 then
 		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_ATTACK_ANNOUNCE)
-		e1:SetOperation(c52709508.atkop)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetTargetRange(0,1)
+		e1:SetValue(c52709508.aclimit)
+		e1:SetCondition(c52709508.actcon)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		c:RegisterEffect(e1)
+		c:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(52709508,2))
 	end
 	if bit.band(att,ATTRIBUTE_FIRE)~=0 then
 		local e1=Effect.CreateEffect(c)
@@ -58,6 +63,7 @@ function c52709508.regop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(c52709508.damop)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		c:RegisterEffect(e1)
+		c:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(52709508,3))
 	end
 	if bit.band(att,ATTRIBUTE_LIGHT)~=0 then
 		local e1=Effect.CreateEffect(c)
@@ -71,20 +77,14 @@ function c52709508.regop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(c52709508.spop)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		c:RegisterEffect(e1)
+		c:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(52709508,4))
 	end
-end
-function c52709508.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
-	e1:SetTargetRange(0,1)
-	e1:SetValue(c52709508.aclimit)
-	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-	Duel.RegisterEffect(e1,tp)
 end
 function c52709508.aclimit(e,re,tp)
 	return re:IsHasType(EFFECT_TYPE_ACTIVATE)
+end
+function c52709508.actcon(e)
+	return Duel.GetAttacker()==e:GetHandler()
 end
 function c52709508.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -104,7 +104,7 @@ function c52709508.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
 function c52709508.spfilter(c,e,tp)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENCE)
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE)
 end
 function c52709508.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c52709508.spfilter(chkc,e,tp) end
@@ -117,7 +117,7 @@ end
 function c52709508.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEDOWN_DEFENCE)
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 		Duel.ConfirmCards(1-tp,tc)
 	end
 end

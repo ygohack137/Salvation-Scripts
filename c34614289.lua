@@ -1,4 +1,4 @@
---U.A. Blockbacker
+--U.A.ストロングブロッカー
 function c34614289.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -46,7 +46,7 @@ function c34614289.postg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c34614289.posop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
-	Duel.ChangePosition(g,POS_FACEUP_DEFENCE,POS_FACEUP_DEFENCE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
+	Duel.ChangePosition(g,POS_FACEUP_DEFENSE,POS_FACEUP_DEFENSE,POS_FACEUP_ATTACK,POS_FACEUP_ATTACK)
 	local og=Duel.GetOperatedGroup()
 	local tc=og:GetFirst()
 	while tc do

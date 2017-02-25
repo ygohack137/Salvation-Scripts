@@ -1,5 +1,6 @@
 --ブラックフェザー・ドラゴン
 function c9012916.initial_effect(c)
+	c:EnableCounterPermit(0x10)
 	--synchro summon
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	c:EnableReviveLimit()
@@ -12,6 +13,9 @@ function c9012916.initial_effect(c)
 	e1:SetTargetRange(1,0)
 	e1:SetValue(c9012916.damval)
 	c:RegisterEffect(e1)
+	local e4=e1:Clone()
+	e4:SetCode(EFFECT_NO_EFFECT_DAMAGE)
+	c:RegisterEffect(e4)
 	--atkdown-c
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -50,9 +54,9 @@ function c9012916.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c9012916.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(aux.nzatk,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,aux.nzatk,tp,0,LOCATION_MZONE,1,1,nil)
 end
 function c9012916.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

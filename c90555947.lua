@@ -7,7 +7,7 @@ function c90555947.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(90555947,0))
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetRange(LOCATION_MZONE)
@@ -17,8 +17,9 @@ function c90555947.initial_effect(c)
 	e1:SetOperation(c90555947.disop)
 	c:RegisterEffect(e1)
 end
+c90555947.miracle_synchro_fusion=true
 function c90555947.ffilter(c)
-	return c:IsAttribute(ATTRIBUTE_EARTH) and c:IsType(TYPE_SYNCHRO)
+	return c:IsFusionAttribute(ATTRIBUTE_EARTH) and c:IsFusionType(TYPE_SYNCHRO)
 end
 function c90555947.discon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
@@ -38,8 +39,7 @@ function c90555947.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c90555947.disop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

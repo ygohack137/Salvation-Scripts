@@ -26,7 +26,7 @@ function c15270885.initial_effect(c)
 	e5:SetCode(EFFECT_DIRECT_ATTACK)
 	e5:SetCondition(c15270885.dircon)
 	c:RegisterEffect(e5)
-	--to defence
+	--to defense
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e6:SetCode(EVENT_PHASE+PHASE_BATTLE)
@@ -44,7 +44,7 @@ function c15270885.atklimit(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterEffect(e1)
 end
 function c15270885.sfilter(c)
-	return c:IsReason(REASON_DESTROY) and c:IsCode(15259703) and c:IsPreviousLocation(LOCATION_ONFIELD)
+	return c:IsReason(REASON_DESTROY) and c:IsPreviousPosition(POS_FACEUP) and c:GetPreviousCodeOnField()==15259703 and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c15270885.sdescon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c15270885.sfilter,1,nil)
@@ -68,7 +68,7 @@ end
 function c15270885.posop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsAttackPos() then
-		Duel.ChangePosition(c,POS_FACEUP_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
 	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)

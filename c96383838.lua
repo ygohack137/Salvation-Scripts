@@ -15,7 +15,8 @@ function c96383838.filter(c,e,tp)
 end
 function c96383838.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c96383838.filter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>2
+	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>2
 		and Duel.IsExistingTarget(c96383838.filter,tp,LOCATION_GRAVE,0,3,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c96383838.filter,tp,LOCATION_GRAVE,0,3,3,nil,e,tp)
@@ -29,7 +30,7 @@ function c96383838.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	local sg=g:Filter(c96383838.rfilter,nil,e,tp)
-	if sg:GetCount()==0 then return end
+	if sg:GetCount()==0 or (sg:GetCount()>1 and Duel.IsPlayerAffectedByEffect(tp,59822133)) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	if sg:GetCount()>ft then sg=sg:Select(tp,ft,ft,nil) end
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)

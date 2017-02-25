@@ -16,10 +16,10 @@ function c2407147.cfilter(c)
 	return c:IsSetCard(0x39) and c:GetCode()~=2407147
 end
 function c2407147.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c2407147.cfilter,tp,LOCATION_GRAVE,0,1,nil) and not e:GetHandler():IsReason(REASON_RETURN)
+	return Duel.IsExistingMatchingCard(c2407147.cfilter,tp,LOCATION_GRAVE,0,1,nil)
 end
 function c2407147.filter(c)
-	return c:IsSetCard(0x39) and c:IsAbleToGrave()
+	return c:IsSetCard(0x39) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c2407147.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c2407147.filter,tp,LOCATION_DECK,0,1,nil) end

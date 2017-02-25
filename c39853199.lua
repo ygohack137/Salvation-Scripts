@@ -32,6 +32,16 @@ function c39853199.initial_effect(c)
 	e3:SetTarget(c39853199.rettg)
 	e3:SetOperation(c39853199.retop)
 	c:RegisterEffect(e3)
+	if not c39853199.global_check then
+		c39853199.global_check=true
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_SPSUMMON_SUCCESS)
+		ge1:SetLabel(39853199)
+		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		ge1:SetOperation(aux.sumreg)
+		Duel.RegisterEffect(ge1,0)
+	end
 end
 function c39853199.destg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetHandler():GetBattleTarget()
@@ -48,10 +58,10 @@ function c39853199.descon2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_PENDULUM
 end
 function c39853199.destg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsDestructable() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c39853199.desop2(e,tp,eg,ep,ev,re,r,rp)
@@ -61,8 +71,7 @@ function c39853199.desop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c39853199.retcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:IsStatus(STATUS_SUMMON_TURN) and bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL
+	return e:GetHandler():GetFlagEffect(39853199)~=0
 end
 function c39853199.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

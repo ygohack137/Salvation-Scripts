@@ -1,4 +1,4 @@
---Ｔｈｅ　ｔｙｒａｎｔ　ＮＥＰＴＵＮＥ
+--The tyrant NEPTUNE
 function c88071625.initial_effect(c)
 	--cannot special summon
 	local e1=Effect.CreateEffect(c)
@@ -44,14 +44,14 @@ function c88071625.initial_effect(c)
 	e6:SetOperation(c88071625.copyop)
 	c:RegisterEffect(e6)
 end
-function c88071625.otcon(e,c)
+function c88071625.otcon(e,c,minc)
 	if c==nil then return true end
-	return c:GetLevel()>6 and Duel.GetTributeCount(c)>0
+	return c:GetLevel()>6 and minc<=1 and Duel.CheckTribute(c,1)
 end
 function c88071625.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local sg=Duel.SelectTribute(tp,c,1,1)
 	c:SetMaterial(sg)
-	Duel.Release(sg, REASON_SUMMON+REASON_MATERIAL)
+	Duel.Release(sg,REASON_SUMMON+REASON_MATERIAL)
 end
 function c88071625.valcheck(e,c)
 	local g=c:GetMaterial()
@@ -60,7 +60,7 @@ function c88071625.valcheck(e,c)
 	local def=0
 	while tc do
 		local catk=tc:GetTextAttack()
-		local cdef=tc:GetTextDefence()
+		local cdef=tc:GetTextDefense()
 		atk=atk+(catk>=0 and catk or 0)
 		def=def+(cdef>=0 and cdef or 0)
 		tc=g:GetNext()
@@ -78,7 +78,7 @@ function c88071625.valcheck(e,c)
 		c:RegisterEffect(e1)
 		--def continuous effect
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		e2:SetValue(def)
 		c:RegisterEffect(e2)
 	end

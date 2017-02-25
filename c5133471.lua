@@ -18,14 +18,14 @@ function c5133471.initial_effect(c)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,5133471)
-	e2:SetCondition(c5133471.descon)
+	e2:SetCondition(aux.exccon)
 	e2:SetCost(c5133471.descost)
 	e2:SetTarget(c5133471.destg)
 	e2:SetOperation(c5133471.activate)
 	c:RegisterEffect(e2)
 end
 function c5133471.filter(c)
-	return c:IsFacedown() and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
+	return c:IsFacedown() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c5133471.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c5133471.filter(chkc) and chkc~=e:GetHandler() end
@@ -40,15 +40,12 @@ function c5133471.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
-function c5133471.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()~=e:GetHandler():GetTurnID()
-end
 function c5133471.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c5133471.filter2(c)
-	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
+	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c5133471.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c5133471.filter2(chkc) and chkc~=e:GetHandler() end

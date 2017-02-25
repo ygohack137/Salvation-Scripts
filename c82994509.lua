@@ -21,23 +21,22 @@ function c82994509.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c82994509.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0 then return end
-	if not Duel.IsPlayerCanSpecialSummonMonster(tp,82994510,0,0x4011,0,0,1,RACE_PLANT,ATTRIBUTE_WIND,POS_FACEUP_DEFENCE,1-tp) then return end
+	if not Duel.IsPlayerCanSpecialSummonMonster(tp,82994510,0,0x4011,0,0,1,RACE_PLANT,ATTRIBUTE_WIND,POS_FACEUP_DEFENSE,1-tp) then return end
 	local token=Duel.CreateToken(tp,82994510)
-	if Duel.SpecialSummonStep(token,0,tp,1-tp,false,false,POS_FACEUP_DEFENCE) then
+	if Duel.SpecialSummonStep(token,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_DESTROY)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetOperation(c82994509.handes)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
+		e1:SetCode(EVENT_LEAVE_FIELD)
+		e1:SetOperation(c82994509.handop)
 		token:RegisterEffect(e1,true)
 	end
 	Duel.SpecialSummonComplete()
 end
-function c82994509.handes(e,tp,eg,ep,ev,re,r,rp)
+function c82994509.handop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsReason(REASON_BATTLE) and c:GetReasonCard():IsRace(RACE_PLANT) then
+	if c:IsReason(REASON_BATTLE) and c:GetBattleTarget():IsRace(RACE_PLANT) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT)
+		Duel.DiscardHand(c:GetPreviousControler(),nil,1,1,REASON_EFFECT)
 	end
+	e:Reset()
 end

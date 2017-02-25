@@ -32,7 +32,7 @@ function c10000000.initial_effect(c)
 	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetValue(aux.tgval)
+	e5:SetValue(1)
 	c:RegisterEffect(e5)
 	--to grave
 	local e6=Effect.CreateEffect(c)
@@ -57,16 +57,16 @@ function c10000000.initial_effect(c)
 	e7:SetOperation(c10000000.desop)
 	c:RegisterEffect(e7)
 end
-function c10000000.ttcon(e,c)
+function c10000000.ttcon(e,c,minc)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-3 and Duel.GetTributeCount(c)>=3
+	return minc<=3 and Duel.CheckTribute(c,3)
 end
 function c10000000.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectTribute(tp,c,3,3)
 	c:SetMaterial(g)
 	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
 end
-function c10000000.setcon(e,c)
+function c10000000.setcon(e,c,minc)
 	if not c then return true end
 	return false
 end
@@ -91,18 +91,18 @@ function c10000000.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_OATH)
-	e1:SetCode(EFFECT_CANNOT_ATTACK)
+	e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	e:GetHandler():RegisterEffect(e1)
 	local g=Duel.SelectReleaseGroup(tp,nil,2,2,nil)
 	Duel.Release(g,REASON_COST)
 end
 function c10000000.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,0,LOCATION_MZONE,1,nil) end
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,0,LOCATION_MZONE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c10000000.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,0,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 	Duel.Destroy(g,REASON_EFFECT)
 end

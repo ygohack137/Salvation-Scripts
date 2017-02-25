@@ -13,8 +13,7 @@ function c34187685.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c34187685.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()~=1 and Duel.GetCurrentPhase()==PHASE_MAIN1
-		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_BP)
+	return Duel.IsAbleToEnterBP()
 end
 function c34187685.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
@@ -22,7 +21,7 @@ function c34187685.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c34187685.filter1(c,tp)
 	local lv=c:GetOriginalLevel()
-	return lv>1 and c:IsDiscardable() and c:IsAbleToGraveAsCost()
+	return lv>1 and c:IsType(TYPE_MONSTER) and c:IsDiscardable() and c:IsAbleToGraveAsCost()
 		and Duel.IsExistingTarget(c34187685.filter2,tp,LOCATION_MZONE,0,1,nil,lv)
 end
 function c34187685.filter2(c,lv)

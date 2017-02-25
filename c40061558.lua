@@ -14,6 +14,7 @@ function c40061558.initial_effect(c)
 	c:RegisterEffect(e2)
 	--summon with 3 tribute
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(40061558,0))
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e3:SetCode(EFFECT_LIMIT_SUMMON_PROC)
@@ -47,9 +48,9 @@ end
 function c40061558.tlimit(e,c)
 	return not c:IsSetCard(0xaa)
 end
-function c40061558.ttcon(e,c)
+function c40061558.ttcon(e,c,minc)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-3 and Duel.GetTributeCount(c)>=3
+	return minc<=3 and Duel.CheckTribute(c,3)
 end
 function c40061558.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectTribute(tp,c,3,3)
@@ -60,17 +61,8 @@ function c40061558.immcon(e)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_NORMAL)==SUMMON_TYPE_NORMAL
 end
 function c40061558.efilter(e,te)
-	if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then return true end
-	if te:IsActiveType(TYPE_MONSTER) and (te:IsHasType(0x7e0) or te:IsHasProperty(EFFECT_FLAG_FIELD_ONLY) or te:IsHasProperty(EFFECT_FLAG_OWNER_RELATE)) then
-		local lv=e:GetHandler():GetLevel()
-		local ec=te:GetOwner()
-		if ec:IsType(TYPE_XYZ) then
-			return ec:GetOriginalRank()<lv
-		else
-			return ec:GetOriginalLevel()<lv
-		end
-	end
-	return false
+	if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then return true
+	else return aux.qlifilter(e,te) end
 end
 function c40061558.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsControlerCanBeChanged() end
@@ -81,9 +73,7 @@ function c40061558.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c40061558.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and not Duel.GetControl(tc,tp,PHASE_END,1) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc:IsRelateToEffect(e) then
+		Duel.GetControl(tc,tp,PHASE_END,1)
 	end
 end

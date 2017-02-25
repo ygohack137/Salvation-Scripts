@@ -35,6 +35,7 @@ function c3429238.initial_effect(c)
 	e3:SetOperation(c3429238.spop)
 	c:RegisterEffect(e3)
 end
+c3429238.material_setcode=0x1017
 function c3429238.tfilter(c)
 	return c:IsCode(56286179) or c:IsHasEffect(20932152)
 end
@@ -50,7 +51,7 @@ function c3429238.datop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_SET_ATTACK)
+		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(c:GetAttack()/2)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		c:RegisterEffect(e1)
@@ -84,16 +85,17 @@ function c3429238.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(3429238)~=0 end
 	e:GetHandler():ResetFlagEffect(3429238)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 end
 function c3429238.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c3429238.spop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) and Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)>0 then
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,c3429238.filter,tp,LOCATION_GRAVE,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c3429238.filter),tp,LOCATION_GRAVE,0,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)

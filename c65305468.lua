@@ -46,8 +46,8 @@ function c65305468.initial_effect(c)
 	c:RegisterEffect(e7)
 end
 c65305468.xyz_number=0
-function c65305468.mfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and not c:IsSetCard(0x48)
+function c65305468.mfilter(c,xyzc)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and not c:IsSetCard(0x48) and c:IsCanBeXyzMaterial(xyzc)
 end
 function c65305468.xyzfilter1(c,g)
 	return g:IsExists(c65305468.xyzfilter2,1,c,c:GetRank())
@@ -55,28 +55,49 @@ end
 function c65305468.xyzfilter2(c,rk)
 	return c:GetRank()==rk
 end
-function c65305468.xyzcon(e,c,og)
+function c65305468.xyzcon(e,c,og,min,max)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local mg=Duel.GetMatchingGroup(c65305468.mfilter,tp,LOCATION_MZONE,0,nil)
+	local mg=nil
+	if og then
+		mg=og:Filter(c65305468.mfilter,nil,c)
+	else
+		mg=Duel.GetMatchingGroup(c65305468.mfilter,tp,LOCATION_MZONE,0,nil,c)
+	end
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
+		and (not min or min<=2 and max>=2)
 		and mg:IsExists(c65305468.xyzfilter1,1,nil,mg)
 end
-function c65305468.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og)
-	local mg=Duel.GetMatchingGroup(c65305468.mfilter,tp,LOCATION_MZONE,0,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g1=mg:FilterSelect(tp,c65305468.xyzfilter1,1,1,nil,mg)
-	local tc1=g1:GetFirst()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g2=mg:FilterSelect(tp,c65305468.xyzfilter2,1,1,tc1,tc1:GetRank())
-	local tc2=g2:GetFirst()
-	g1:Merge(g2)
-	local sg1=tc1:GetOverlayGroup()
-	local sg2=tc2:GetOverlayGroup()
-	sg1:Merge(sg2)
-	Duel.SendtoGrave(sg1,REASON_RULE)
-	c:SetMaterial(g1)
-	Duel.Overlay(c,g1)
+function c65305468.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
+	local g=nil
+	local sg=Group.CreateGroup()
+	if og and not min then
+		g=og
+		local tc=og:GetFirst()
+		while tc do
+			sg:Merge(tc:GetOverlayGroup())
+			tc=og:GetNext()
+		end
+	else
+		local mg=nil
+		if og then
+			mg=og:Filter(c65305468.mfilter,nil,c)
+		else
+			mg=Duel.GetMatchingGroup(c65305468.mfilter,tp,LOCATION_MZONE,0,nil,c)
+		end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+		g=mg:FilterSelect(tp,c65305468.xyzfilter1,1,1,nil,mg)
+		local tc1=g:GetFirst()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+		local g2=mg:FilterSelect(tp,c65305468.xyzfilter2,1,1,tc1,tc1:GetRank())
+		local tc2=g2:GetFirst()
+		g:Merge(g2)
+		sg:Merge(tc1:GetOverlayGroup())
+		sg:Merge(tc2:GetOverlayGroup())
+	end
+	Duel.SendtoGrave(sg,REASON_RULE)
+	c:SetMaterial(g)
+	Duel.Overlay(c,g)
 end
 function c65305468.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetHandler():GetBattleTarget()
@@ -85,10 +106,8 @@ function c65305468.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c65305468.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetBattleTarget()
-	if tc:IsRelateToBattle() and not Duel.GetControl(tc,tp,PHASE_BATTLE,1) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc:IsRelateToBattle() then
+		Duel.GetControl(tc,tp,PHASE_BATTLE,1)
 	end
 end
 function c65305468.reptg(e,tp,eg,ep,ev,re,r,rp,chk)

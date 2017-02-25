@@ -1,5 +1,6 @@
 --キックファイア
 function c11501629.initial_effect(c)
+	c:EnableCounterPermit(0x2d)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -35,8 +36,12 @@ function c11501629.ctfilter(c,tp)
 end
 function c11501629.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	local ct=eg:FilterCount(c11501629.ctfilter,nil,tp)
-	e:SetLabel(ct)
-	return ct>0
+	if ct>0 and e:GetHandler():IsCanAddCounter(0x2d,ct) then
+		e:SetLabel(ct)
+		return true
+	else
+		return false
+	end
 end
 function c11501629.ctop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x2d,e:GetLabel())

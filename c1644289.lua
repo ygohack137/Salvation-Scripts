@@ -13,6 +13,7 @@ function c1644289.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_EQUIP)
 	e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e2:SetValue(c1644289.tglimit)
 	c:RegisterEffect(e2)
 	--Equip limit
@@ -38,7 +39,7 @@ function c1644289.eqlimit(e,c)
 	return c:IsSetCard(0x30)
 end
 function c1644289.tglimit(e,re,rp)
-	return aux.tgoval(e,re,rp) and re:IsActiveType(TYPE_TRAP+TYPE_MONSTER) 
+	return rp~=e:GetHandlerPlayer() and re:IsActiveType(TYPE_TRAP+TYPE_MONSTER) 
 end
 function c1644289.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x30)

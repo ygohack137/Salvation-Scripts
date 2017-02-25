@@ -13,6 +13,7 @@ function c60800381.initial_effect(c)
 	e1:SetOperation(c60800381.op)
 	c:RegisterEffect(e1)
 end
+c60800381.material_setcode=0x1017
 function c60800381.tfilter(c)
 	return c:IsCode(63977008) or c:IsHasEffect(20932152)
 end
@@ -25,7 +26,7 @@ end
 function c60800381.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(c60800381.filter,tp,LOCATION_MZONE,0,nil)
-	if g:GetCount()>0 then
+	if g:GetCount()>0 and c:IsFaceup() and c:IsRelateToEffect(e) then
 		local atk=0
 		local tc=g:GetFirst()
 		while tc do

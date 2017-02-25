@@ -1,4 +1,4 @@
---로켓핸드
+--ロケットハンド
 function c13317419.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -72,7 +72,7 @@ function c13317419.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function c13317419.desfilter(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup()
 end
 function c13317419.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c13317419.desfilter(chkc) end
@@ -86,6 +86,7 @@ function c13317419.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0
 		and ec and ec:IsFaceup() and ec:IsLocation(LOCATION_MZONE) then
+		Duel.BreakEffect()
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)

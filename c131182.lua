@@ -19,11 +19,9 @@ function c131182.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetTargetRange(LOCATION_MZONE,0)
-	e4:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
-	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e4:SetTarget(c131182.atktg)
-	e4:SetValue(aux.imval1)
+	e4:SetTargetRange(0,LOCATION_MZONE)
+	e4:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e4:SetValue(c131182.atlimit)
 	c:RegisterEffect(e4)
 	--spsummon
 	local e5=Effect.CreateEffect(c)
@@ -55,7 +53,7 @@ function c131182.initial_effect(c)
 	c:RegisterEffect(e7)
 end
 function c131182.exfilter(c)
-	return c:IsFaceup() and c:GetCode()==131182
+	return c:IsFaceup() and c:IsCode(131182)
 end
 function c131182.excon(e)
 	local c=e:GetHandler()
@@ -64,7 +62,7 @@ end
 function c131182.splimit(e,se,sp,st,spos,tgp)
 	return not Duel.IsExistingMatchingCard(c131182.exfilter,tgp,LOCATION_ONFIELD,0,1,nil)
 end
-function c131182.atktg(e,c)
+function c131182.atlimit(e,c)
 	return c:IsFaceup() and c~=e:GetHandler()
 end
 function c131182.battleop(e,tp,eg,ep,ev,re,r,rp)
@@ -86,10 +84,10 @@ function c131182.descon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT)~=0 and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
 end
 function c131182.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsDestructable() end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c131182.desop(e,tp,eg,ep,ev,re,r,rp)

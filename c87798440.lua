@@ -16,7 +16,7 @@ function c87798440.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(c87798440.uncon)
+	e2:SetCondition(aux.IsUnionState)
 	e2:SetTarget(c87798440.sptg)
 	e2:SetOperation(c87798440.spop)
 	c:RegisterEffect(e2)
@@ -25,7 +25,7 @@ function c87798440.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_EQUIP)
 	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	e3:SetCode(EFFECT_DESTROY_SUBSTITUTE)
-	e3:SetCondition(c87798440.uncon)
+	e3:SetCondition(aux.IsUnionState)
 	e3:SetValue(c87798440.repval)
 	c:RegisterEffect(e3)
 	--destroy
@@ -48,9 +48,7 @@ function c87798440.initial_effect(c)
 	e5:SetValue(c87798440.eqlimit)
 	c:RegisterEffect(e5)
 end
-function c87798440.uncon(e)
-	return e:GetHandler():IsStatus(STATUS_UNION)
-end
+c87798440.old_union=true
 function c87798440.repval(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE)~=0
 end
@@ -78,7 +76,7 @@ function c87798440.eqop(e,tp,eg,ep,ev,re,r,rp)
 		return
 	end
 	if not Duel.Equip(tp,c,tc,false) then return end
-	c:SetStatus(STATUS_UNION,true)
+	aux.SetUnionState(c)
 end
 function c87798440.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(87798440)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -88,18 +86,17 @@ function c87798440.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c87798440.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)
-	end
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP_ATTACK)
 end
 function c87798440.descon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and e:GetHandler():GetEquipTarget()==eg:GetFirst() and c87798440.uncon(e)
+	return ep~=tp and e:GetHandler():GetEquipTarget()==eg:GetFirst() and aux.IsUnionState(e)
 end
 function c87798440.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsDestructable() end
+	if chkc then return chkc:IsOnField() end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c87798440.desop(e,tp,eg,ep,ev,re,r,rp)

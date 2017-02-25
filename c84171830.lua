@@ -21,8 +21,8 @@ function c84171830.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(c84171830.atktg)
 	e3:SetCondition(c84171830.atkcon)
+	e3:SetTarget(c84171830.atktg)
 	e3:SetValue(800)
 	c:RegisterEffect(e3)
 	--lv
@@ -47,14 +47,16 @@ function c84171830.discon(e)
 		and Duel.IsExistingMatchingCard(c84171830.cfilter,tp,LOCATION_MZONE,0,1,nil)
 		and not Duel.IsExistingMatchingCard(c84171830.cfilter,tp,0,LOCATION_MZONE,1,nil)
 end
-function c84171830.atktg(e,c)
-	return bit.band(c:GetSummonType(),SUMMON_TYPE_ADVANCE)==SUMMON_TYPE_ADVANCE and Duel.GetAttacker()==c
-end
 function c84171830.atkcon(e)
-	return Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL and Duel.GetAttackTarget()~=nil
+	local d=Duel.GetAttackTarget()
+	local tp=e:GetHandlerPlayer()
+	return Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL and d and d:IsControler(1-tp)
+end
+function c84171830.atktg(e,c)
+	return c==Duel.GetAttacker() and bit.band(c:GetSummonType(),SUMMON_TYPE_ADVANCE)==SUMMON_TYPE_ADVANCE
 end
 function c84171830.filter(c)
-	return c:GetAttack()==2800 and c:GetDefence()==1000
+	return c:GetAttack()==2800 and c:GetDefense()==1000
 end
 function c84171830.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c84171830.filter,tp,LOCATION_HAND,0,1,nil) end

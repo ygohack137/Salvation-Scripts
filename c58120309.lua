@@ -19,7 +19,7 @@ function c58120309.condition(e,tp,eg,ep,ev,re,r,rp)
 	return ex and tg~=nil and tc+tg:FilterCount(c58120309.filter,nil,tp)-tg:GetCount()>1
 end
 function c58120309.sfilter(c,e,tp)
-	return c:GetCode()==44508094 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(44508094) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c58120309.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -31,8 +31,7 @@ end
 function c58120309.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=re:GetHandler()
 	if not tc:IsDisabled() then
-		Duel.NegateEffect(ev)
-		if tc:IsRelateToEffect(re) and Duel.Destroy(eg,REASON_EFFECT)~=0 then
+		if Duel.NegateEffect(ev) and tc:IsRelateToEffect(re) and Duel.Destroy(eg,REASON_EFFECT)~=0 then
 			local sc=Duel.GetFirstMatchingCard(c58120309.sfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 			if sc and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(58120309,0)) then
 				Duel.BreakEffect()

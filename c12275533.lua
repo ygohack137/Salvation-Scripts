@@ -45,7 +45,8 @@ function c12275533.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c12275533.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
@@ -74,7 +75,7 @@ function c12275533.adjustop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
 	e1:SetReset(RESET_EVENT+0x1ff0000)
-	e1:SetCode(EFFECT_UPDATE_DEFENCE)
+	e1:SetCode(EFFECT_UPDATE_DEFENSE)
 	e1:SetValue(-500)
 	c:RegisterEffect(e1)
 end

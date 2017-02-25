@@ -13,7 +13,6 @@ function c99064191.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_CHAINING)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e2:SetCondition(c99064191.condition2)
 	e2:SetCost(c99064191.cost2)
 	e2:SetTarget(c99064191.target2)
@@ -35,7 +34,7 @@ function c99064191.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsChainDisablable(ct-1) and Duel.SelectYesNo(tp,aux.Stringid(99064191,1)) then
 		Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 		Duel.SetOperationInfo(0,CATEGORY_DISABLE,tc,1,0,0)
-		if tc:IsDestructable() and tc:IsRelateToEffect(pe) then
+		if tc:IsRelateToEffect(pe) then
 			Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
 		end
 		e:SetLabel(1)

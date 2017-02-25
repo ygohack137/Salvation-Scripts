@@ -1,21 +1,15 @@
 --炎獣の影霊衣－セフィラエグザ
 function c20773176.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--splimit
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e2:SetTargetRange(1,0)
 	e2:SetTarget(c20773176.splimit)
-	e2:SetCondition(c20773176.splimcon)
 	c:RegisterEffect(e2)
 	--spsummon
 	local e3=Effect.CreateEffect(c)
@@ -34,9 +28,6 @@ function c20773176.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0xb4) or c:IsSetCard(0xc4) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
-function c20773176.splimcon(e)
-	return not e:GetHandler():IsForbidden()
-end
 function c20773176.filter(c,tp)
 	return c:IsReason(REASON_BATTLE+REASON_EFFECT)
 		and (c:IsSetCard(0xb4) or c:IsSetCard(0xc4)) and not c:IsCode(20773176)
@@ -54,7 +45,6 @@ function c20773176.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c20773176.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)
-	end
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end

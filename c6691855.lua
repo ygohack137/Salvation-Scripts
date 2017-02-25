@@ -22,7 +22,7 @@ function c6691855.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c6691855.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c6691855.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectTarget(tp,c6691855.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,c6691855.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end
 function c6691855.operation(e,tp,eg,ep,ev,re,r,rp)
@@ -39,9 +39,10 @@ function c6691855.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(500)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		c:RegisterEffect(e1)
+		--def
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_EQUIP)
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		e2:SetCondition(c6691855.defcon)
 		e2:SetValue(c6691855.defval)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
@@ -57,8 +58,9 @@ function c6691855.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c6691855.defcon(e)
+	if Duel.GetCurrentPhase()~=PHASE_DAMAGE_CAL then return false end
 	local eq=e:GetHandler():GetEquipTarget()
-	return Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL and eq:IsRelateToBattle() and eq:IsDefencePos()
+	return (eq==Duel.GetAttacker() or eq==Duel.GetAttackTarget()) and eq:IsDefensePos()
 end
 function c6691855.defval(e,c)
 	return c:GetAttack()

@@ -1,5 +1,6 @@
 --巨大戦艦 ビッグ・コア
 function c14148099.initial_effect(c)
+	c:EnableCounterPermit(0x1f)
 	--summon success
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(14148099,0))

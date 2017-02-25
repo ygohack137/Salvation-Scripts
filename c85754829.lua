@@ -1,5 +1,6 @@
 --ワーム・グルス
 function c85754829.initial_effect(c)
+	c:EnableCounterPermit(0xf)
 	--add counter
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)

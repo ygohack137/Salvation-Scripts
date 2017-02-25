@@ -14,7 +14,7 @@ function c79569173.initial_effect(c)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(79569173)
+	e2:SetCode(EVENT_CUSTOM+79569173)
 	e2:SetTarget(c79569173.thtg)
 	e2:SetOperation(c79569173.thop)
 	c:RegisterEffect(e2)
@@ -36,6 +36,7 @@ function c79569173.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetCountLimit(1)
 	e1:SetRange(LOCATION_SZONE)
+	e1:SetCondition(c79569173.descon)
 	e1:SetOperation(c79569173.desop)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
@@ -54,14 +55,16 @@ function c79569173.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	e:GetHandler():RegisterEffect(e1)
 end
+function c79569173.descon(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer()
+end
 function c79569173.desop(e,tp,eg,ep,ev,re,r,rp)
-	if tp~=Duel.GetTurnPlayer() then return end
 	local c=e:GetHandler()
 	local ct=c:GetTurnCounter()
 	ct=ct+1
 	c:SetTurnCounter(ct)
 	if ct==3 and Duel.Destroy(c,REASON_EFFECT)>0 then
-		Duel.RaiseSingleEvent(e:GetHandler(),79569173,e,0,tp,tp,0)
+		Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+79569173,e,0,tp,tp,0)
 	end
 end
 function c79569173.disop(e,tp)

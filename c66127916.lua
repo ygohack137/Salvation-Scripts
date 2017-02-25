@@ -2,7 +2,7 @@
 function c66127916.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -11,17 +11,15 @@ function c66127916.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c66127916.filter1(c,tp)
-	return c.material_count and Duel.IsExistingMatchingCard(c66127916.filter2,tp,LOCATION_DECK,0,1,nil,c)
+	return c.material and Duel.IsExistingMatchingCard(c66127916.filter2,tp,LOCATION_DECK,0,1,nil,c)
 end
 function c66127916.filter2(c,fc)
-	if c:IsHasEffect(EFFECT_FORBIDDEN) or not c:IsAbleToHand() then return false end
-	for i=1,fc.material_count do
-		if c:IsCode(fc.material[i]) then return true end
-	end
-	return false
+	if c:IsForbidden() or not c:IsAbleToHand() then return false end
+	return c:IsCode(table.unpack(fc.material))
 end
 function c66127916.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c66127916.filter1,tp,LOCATION_EXTRA,0,1,nil,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c66127916.filter3(c)
 	return c:IsCode(24094653) and c:IsAbleToHand()
@@ -36,7 +34,7 @@ function c66127916.activate(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		local tg=Duel.GetMatchingGroup(c66127916.filter3,tp,LOCATION_GRAVE,0,nil)
+		local tg=Duel.GetMatchingGroup(aux.NecroValleyFilter(c66127916.filter3),tp,LOCATION_GRAVE,0,nil)
 		if tg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(66127916,0)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)

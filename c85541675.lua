@@ -1,5 +1,6 @@
 --カラクリ解体新書
 function c85541675.initial_effect(c)
+	c:EnableCounterPermit(0x12)
 	c:SetCounterLimit(0x12,2)
 	--activate
 	local e1=Effect.CreateEffect(c)

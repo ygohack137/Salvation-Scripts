@@ -12,7 +12,7 @@ function c48179391.initial_effect(c)
 	--spsummon limit
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetRange(LOCATION_SZONE)
+	e2:SetRange(LOCATION_FZONE)
 	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetTargetRange(1,0)
@@ -21,7 +21,7 @@ function c48179391.initial_effect(c)
 	--
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetRange(LOCATION_SZONE)
+	e3:SetRange(LOCATION_FZONE)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetTargetRange(LOCATION_MZONE,0)
 	e3:SetValue(500)
@@ -30,21 +30,19 @@ function c48179391.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e4:SetRange(LOCATION_SZONE)
+	e4:SetRange(LOCATION_FZONE)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
 	e4:SetCountLimit(1)
 	e4:SetValue(c48179391.valcon)
 	c:RegisterEffect(e4)
-	--
+	--atk limit
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_FIELD)
-	e5:SetRange(LOCATION_SZONE)
-	e5:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e5:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
-	e5:SetTargetRange(LOCATION_MZONE,0)
+	e5:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e5:SetRange(LOCATION_FZONE)
+	e5:SetTargetRange(0,LOCATION_MZONE)
 	e5:SetCondition(c48179391.atkcon)
-	e5:SetTarget(c48179391.atktg)
-	e5:SetValue(aux.imval1)
+	e5:SetValue(c48179391.atlimit)
 	c:RegisterEffect(e5)
 end
 function c48179391.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -52,7 +50,7 @@ function c48179391.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterFlagEffect(tp,48179391,0,0,0)
 end
 function c48179391.desfilter(c)
-	return bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)~=0 and c:IsDestructable()
+	return bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)~=0
 end
 function c48179391.acttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -78,6 +76,6 @@ end
 function c48179391.atkfilter(c,atk)
 	return c:IsFaceup() and c:GetAttack()<atk
 end
-function c48179391.atktg(e,c)
-	return not Duel.IsExistingMatchingCard(c48179391.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,c,c:GetAttack())
+function c48179391.atlimit(e,c)
+	return c:IsFaceup() and not Duel.IsExistingMatchingCard(c48179391.atkfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,c,c:GetAttack())
 end

@@ -2,7 +2,7 @@
 function c7617253.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
@@ -31,8 +31,7 @@ function c7617253.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetTargetCard(tg)
 end
 function c7617253.filter(c)
-	local code=c:GetCode()
-	return (code==79856792 or code==79407975) and c:IsAbleToHand()
+	return c:IsSetCard(0x2034) and c:IsAbleToHand()
 end
 function c7617253.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetAttacker()

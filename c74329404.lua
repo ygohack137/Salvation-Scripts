@@ -1,5 +1,6 @@
 --D－フォーメーション
 function c74329404.initial_effect(c)
+	c:EnableCounterPermit(0x1c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -8,9 +9,8 @@ function c74329404.initial_effect(c)
 	--counter
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCode(EVENT_DESTROY)
+	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCondition(c74329404.ctcon)
 	e2:SetOperation(c74329404.ctop)
 	c:RegisterEffect(e2)
@@ -31,7 +31,7 @@ function c74329404.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c74329404.ctfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0xc008) and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
+	return c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousSetCard(0xc008)
 end
 function c74329404.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c74329404.ctfilter,1,nil,tp)
@@ -52,7 +52,7 @@ function c74329404.filter1(c,e,tp)
 		and Duel.IsExistingMatchingCard(c74329404.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c:GetCode())
 end
 function c74329404.filter2(c,code)
-	return c:IsCode(code) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsCode(code) and c:IsAbleToHand()
 end
 function c74329404.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(c74329404.filter1,1,nil,nil,tp) end
@@ -68,7 +68,7 @@ function c74329404.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	local tc=g:GetFirst()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local ag=Duel.SelectMatchingCard(tp,c74329404.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,2,nil,tc:GetCode())
+	local ag=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c74329404.filter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,2,nil,tc:GetCode())
 	Duel.SendtoHand(ag,nil,REASON_EFFECT)
 	Duel.ConfirmCards(1-tp,ag)
 end

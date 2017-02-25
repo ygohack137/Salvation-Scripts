@@ -1,5 +1,6 @@
 --倍返し
 function c5914184.initial_effect(c)
+	c:EnableCounterPermit(0x1a)
 	--counter
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

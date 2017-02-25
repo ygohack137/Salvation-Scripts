@@ -2,7 +2,7 @@
 function c74583607.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0xaf),2,true)
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xaf),2,true)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -50,7 +50,9 @@ function c74583607.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c74583607.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and e:GetHandler():GetPreviousControler()==tp
+	local c=e:GetHandler()
+	return c:IsReason(REASON_BATTLE)
+		or (rp~=tp and c:IsReason(REASON_EFFECT) and c:GetPreviousControler()==tp)
 end
 function c74583607.thfilter(c)
 	return c:IsSetCard(0xae) and c:IsAbleToHand()
@@ -66,6 +68,5 @@ function c74583607.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
 	end
 end

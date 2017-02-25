@@ -30,6 +30,7 @@ function c23558733.initial_effect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetCode(EVENT_PHASE+PHASE_END)
 	e4:SetRange(LOCATION_GRAVE)
+	e4:SetCountLimit(1)
 	e4:SetCondition(c23558733.spcon)
 	e4:SetCost(c23558733.spcost)
 	e4:SetTarget(c23558733.sptg)
@@ -75,6 +76,6 @@ function c23558733.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c23558733.spop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
-		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,true,false,POS_FACEUP_DEFENCE)
+		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,true,false,POS_FACEUP_DEFENSE)
 	end
 end

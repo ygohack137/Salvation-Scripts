@@ -28,7 +28,7 @@ function c53027855.initial_effect(c)
 	--leave
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e4:SetCode(EVENT_LEAVE_FIELD)
+	e4:SetCode(EVENT_LEAVE_FIELD_P)
 	e4:SetOperation(c53027855.leaveop)
 	c:RegisterEffect(e4)
 end
@@ -38,7 +38,7 @@ function c53027855.spcon(e,c)
 		Duel.GetMatchingGroupCount(Card.IsAttribute,c:GetControler(),LOCATION_GRAVE,0,nil,ATTRIBUTE_WIND)==5
 end
 function c53027855.desfilter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c53027855.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -50,7 +50,8 @@ function c53027855.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(g,REASON_EFFECT)
 end
 function c53027855.leaveop(e,tp,eg,ep,ev,re,r,rp)
-	local effp=e:GetHandler():GetPreviousControler()
+	if e:GetHandler():IsFacedown() then return end
+	local effp=e:GetHandler():GetControler()
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SKIP_BP)

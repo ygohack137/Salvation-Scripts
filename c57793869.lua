@@ -27,7 +27,7 @@ function c57793869.initial_effect(c)
 	e4:SetValue(c57793869.adval)
 	c:RegisterEffect(e4)
 	local e5=e4:Clone()
-	e5:SetCode(EFFECT_SET_DEFENCE)
+	e5:SetCode(EFFECT_SET_DEFENSE)
 	c:RegisterEffect(e5)
 	--Eraser
 	local e6=Effect.CreateEffect(c)
@@ -49,9 +49,9 @@ function c57793869.initial_effect(c)
 	e7:SetOperation(c57793869.desop)
 	c:RegisterEffect(e7)
 end
-function c57793869.ttcon(e,c)
+function c57793869.ttcon(e,c,minc)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-3 and Duel.GetTributeCount(c)>=3
+	return minc<=3 and Duel.CheckTribute(c,3)
 end
 function c57793869.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectTribute(tp,c,3,3)
@@ -66,7 +66,7 @@ function c57793869.erascon(e)
 end
 function c57793869.erastg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local dg=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	local dg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dg,dg:GetCount(),0,0)
 end
 function c57793869.erasop(e,tp,eg,ep,ev,re,r,rp)

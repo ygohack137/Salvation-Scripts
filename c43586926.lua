@@ -3,6 +3,7 @@ function c43586926.initial_effect(c)
 	--to grave
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetCode(EVENT_TO_GRAVE)
 	e1:SetOperation(c43586926.regop)
 	c:RegisterEffect(e1)
@@ -38,7 +39,7 @@ function c43586926.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1ff0000)
 		c:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_SET_DEFENCE)
+		e2:SetCode(EFFECT_SET_DEFENSE)
 		c:RegisterEffect(e2)
 	end
 end

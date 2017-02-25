@@ -5,7 +5,7 @@ function c74064212.initial_effect(c)
 	e1:SetDescription(aux.Stringid(74064212,0))
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_TO_GRAVE)
 	e1:SetCondition(c74064212.eqcon)
 	e1:SetCost(c74064212.eqcost)
@@ -51,7 +51,8 @@ function c74064212.eqop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c74064212.eqlimit(e,c)
-	return c:GetControler()==e:GetHandlerPlayer() or e:GetHandler():GetEquipTarget()==c
+	local tp=e:GetHandlerPlayer()
+	return c:IsControler(tp)
 end
 function c74064212.atkcon(e)
 	local ph=Duel.GetCurrentPhase()

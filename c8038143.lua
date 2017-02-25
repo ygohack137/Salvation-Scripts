@@ -38,7 +38,7 @@ function c8038143.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		if tgp~=tp and (te:IsActiveType(TYPE_MONSTER) or te:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(i) then
 			local tc=te:GetHandler()
 			ng:AddCard(tc)
-			if tc:IsOnField() and tc:IsRelateToEffect(te) and tc:IsAbleToDeck() then
+			if tc:IsOnField() and tc:IsRelateToEffect(te) and not tc:IsHasEffect(EFFECT_CANNOT_TO_DECK) and Duel.IsPlayerCanSendtoDeck(tp,tc) then
 				dg:AddCard(tc)
 			end
 		end
@@ -51,10 +51,9 @@ function c8038143.activate(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Group.CreateGroup()
 	for i=1,ev do
 		local te,tgp=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
-		if tgp~=tp and (te:IsActiveType(TYPE_MONSTER) or te:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(i) then
-			Duel.NegateActivation(i)
+		if tgp~=tp and (te:IsActiveType(TYPE_MONSTER) or te:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.NegateActivation(i) then
 			local tc=te:GetHandler()
-			if tc:IsRelateToEffect(e) and tc:IsRelateToEffect(te) and tc:IsAbleToDeck() then
+			if tc:IsRelateToEffect(e) and tc:IsRelateToEffect(te) and not tc:IsHasEffect(EFFECT_CANNOT_TO_DECK) and Duel.IsPlayerCanSendtoDeck(tp,tc) then
 				tc:CancelToGrave()
 				dg:AddCard(tc)
 			end

@@ -28,7 +28,7 @@ function c4545683.initial_effect(c)
 	e3:SetValue(c4545683.val)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
-	e4:SetCode(EFFECT_UPDATE_DEFENCE)
+	e4:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e4)
 	--equip
 	local e5=Effect.CreateEffect(c)
@@ -67,7 +67,8 @@ function c4545683.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c4545683.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)>0 then
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)~=0 then
 		c:CompleteProcedure()
 	end
 end
@@ -91,7 +92,7 @@ end
 function c4545683.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
 		if c:IsFaceup() and c:IsRelateToEffect(e) then
 			local atk=tc:GetTextAttack()
 			if atk<0 then atk=0 end
@@ -128,9 +129,9 @@ function c4545683.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,c4545683.spfilter,tp,LOCATION_SZONE,0,1,1,nil,e,tp,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
-function c4545683.spop2(e,tp,eg,ep,ev,re,r,rp,chk)
+function c4545683.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENCE)
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end

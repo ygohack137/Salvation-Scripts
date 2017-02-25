@@ -1,4 +1,4 @@
---Malacoda, Netherlord of the Burning Abyss
+--彼岸の鬼神 ヘルレイカー
 function c35330871.initial_effect(c)
 	c:EnableReviveLimit()
 	--special summon condition
@@ -6,7 +6,7 @@ function c35330871.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetValue(c35330871.splimit)
+	e1:SetValue(aux.ritlimit)
 	c:RegisterEffect(e1)
 	--atk & def down
 	local e2=Effect.CreateEffect(c)
@@ -33,9 +33,6 @@ function c35330871.initial_effect(c)
 	e3:SetOperation(c35330871.tgop)
 	c:RegisterEffect(e3)
 end
-function c35330871.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_RITUAL)==SUMMON_TYPE_RITUAL
-end
 function c35330871.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
@@ -58,17 +55,17 @@ end
 function c35330871.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local cc=e:GetLabelObject()
 	local atk=cc:GetAttack()
-	local def=cc:GetDefence()
+	local def=cc:GetDefense()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		e1:SetValue(-atk)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		e2:SetValue(-def)
 		tc:RegisterEffect(e2)
 	end

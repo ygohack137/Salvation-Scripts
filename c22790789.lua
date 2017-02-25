@@ -1,5 +1,6 @@
 --巨大戦艦 クリスタル・コア
 function c22790789.initial_effect(c)
+	c:EnableCounterPermit(0x1f)
 	--summon success
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(22790789,0))
@@ -86,6 +87,6 @@ end
 function c22790789.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsPosition(POS_FACEUP_ATTACK) and tc:IsRelateToEffect(e) then
-		Duel.ChangePosition(tc,POS_FACEUP_DEFENCE)
+		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
 	end
 end

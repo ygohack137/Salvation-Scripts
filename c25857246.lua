@@ -6,12 +6,12 @@ function c25857246.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c25857246.splimit)
+	e1:SetValue(aux.ritlimit)
 	c:RegisterEffect(e1)
 	--atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(25857246,0))
-	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1,25857246)
@@ -29,9 +29,6 @@ function c25857246.initial_effect(c)
 	e3:SetTarget(c25857246.target)
 	e3:SetOperation(c25857246.operation)
 	c:RegisterEffect(e3)
-end
-function c25857246.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_RITUAL)==SUMMON_TYPE_RITUAL
 end
 function c25857246.mat_filter(c)
 	return c:GetLevel()~=8

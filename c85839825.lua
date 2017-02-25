@@ -13,10 +13,12 @@ function c85839825.initial_effect(c)
 end
 function c85839825.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST) end
-	Duel.RemoveOverlayCard(tp,1,0,1,1,REASON_COST)
+	Duel.Hint(HINT_SELECTMSG,tp,532)
+	local sg=Duel.SelectMatchingCard(tp,Card.CheckRemoveOverlayCard,tp,LOCATION_MZONE,0,1,1,nil,tp,1,REASON_COST)
+	sg:GetFirst():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c85839825.filter(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup()
 end
 function c85839825.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c85839825.filter(chkc) end

@@ -17,7 +17,7 @@ function c35448319.initial_effect(c)
 	e2:SetDescription(aux.Stringid(35448319,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_DESTROY)
+	e2:SetCode(EVENT_DESTROYED)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCondition(c35448319.spcon)
 	e2:SetTarget(c35448319.sptg)
@@ -30,7 +30,7 @@ function c35448319.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(sg,REASON_COST)
 end
 function c35448319.filter(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup()
 end
 function c35448319.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and c35448319.filter(chkc) end
@@ -46,7 +46,7 @@ function c35448319.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c35448319.spfilter(c)
-	return c:IsOnField() and c:IsRace(RACE_PLANT)
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) and bit.band(c:GetPreviousRaceOnField(),RACE_PLANT)~=0
 end
 function c35448319.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(e:GetHandler()) and eg:IsExists(c35448319.spfilter,1,nil)

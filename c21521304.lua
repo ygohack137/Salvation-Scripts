@@ -51,7 +51,7 @@ function c21521304.rmfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsAbleToRemove()
 end
 function c21521304.spfilter(c,e,tp)
-	return c:IsSetCard(0x7f) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x107f) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c21521304.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

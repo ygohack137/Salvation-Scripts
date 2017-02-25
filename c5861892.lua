@@ -60,22 +60,22 @@ function c5861892.arcanareg(c,coin)
 	e1:SetCondition(c5861892.thcon)
 	e1:SetTarget(c5861892.thtg)
 	e1:SetOperation(c5861892.thop)
-	e1:SetReset(RESET_EVENT+0x1ff0000)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
 	--
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(5861892,2))
 	e2:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_F)
+	e2:SetType(EFFECT_TYPE_QUICK_F)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCondition(c5861892.negcon)
 	e2:SetTarget(c5861892.negtg)
 	e2:SetOperation(c5861892.negop)
-	e2:SetReset(RESET_EVENT+0x1ff0000)
+	e2:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e2)
-	c:RegisterFlagEffect(36690018,RESET_EVENT+0x1ff0000,EFFECT_FLAG_CLIENT_HINT,1,coin,63-coin)
+	c:RegisterFlagEffect(36690018,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,coin,63-coin)
 end
 function c5861892.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -104,7 +104,11 @@ function c5861892.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:GetFlagEffectLabel(36690018)==0 and (re:IsHasType(EFFECT_TYPE_ACTIVATE) or re:IsActiveType(TYPE_MONSTER))
 end
 function c5861892.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	local c=e:GetHandler()
+	if chk==0 then return c:GetFlagEffect(5861892)==0 end
+	if c:IsHasEffect(EFFECT_REVERSE_UPDATE) then
+		c:RegisterFlagEffect(5861892,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	if re:GetHandler():IsRelateToEffect(re) and re:GetHandler():IsDestructable() then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)

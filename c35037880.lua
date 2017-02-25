@@ -2,7 +2,7 @@
 function c35037880.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DAMAGE+CATEGORY_RECOVER)
+	e1:SetCategory(CATEGORY_DAMAGE+CATEGORY_RECOVER+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_DAMAGE)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
@@ -27,8 +27,9 @@ function c35037880.filter(c)
 	return ((c:IsSetCard(0xd) and c:IsType(TYPE_SPELL+TYPE_TRAP)) or c:IsSetCard(0xb0)) and c:IsAbleToHand()
 end
 function c35037880.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Recover(tp,ev,REASON_EFFECT)
-	Duel.Damage(1-tp,ev,REASON_EFFECT)
+	Duel.Recover(tp,ev,REASON_EFFECT,true)
+	Duel.Damage(1-tp,ev,REASON_EFFECT,true)
+	Duel.RDComplete()
 	local g=Duel.GetMatchingGroup(c35037880.filter,tp,LOCATION_DECK,0,nil)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(35037880,0)) then
 		Duel.BreakEffect()

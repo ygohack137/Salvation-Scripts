@@ -58,11 +58,10 @@ function c68396121.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function c68396121.aclimit(e,re,tp)
-	return re:GetHandler():IsOnField()
+	return re:GetHandler():IsOnField() and not re:GetHandler():IsImmuneToEffect(e)
 end
 function c68396121.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()~=1 and Duel.GetCurrentPhase()==PHASE_MAIN1
-		and not Duel.IsPlayerAffectedByEffect(tp,EFFECT_CANNOT_BP)
+	return Duel.IsAbleToEnterBP()
 		and e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,88177324)
 end
 function c68396121.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -71,32 +70,17 @@ function c68396121.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(g,REASON_COST)
 end
 function c68396121.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetEffectCount(EFFECT_EXTRA_ATTACK)==0 end
+	if chk==0 then return e:GetHandler():GetEffectCount(EFFECT_EXTRA_ATTACK_MONSTER)==0 end
 end
 function c68396121.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_EXTRA_ATTACK)
+		e1:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
 		e1:SetValue(2)
 		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
-		e2:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+RESET_END)
-		e2:SetCondition(c68396121.dircon)
-		c:RegisterEffect(e2)
-		local e3=e2:Clone()
-		e3:SetCode(EFFECT_CANNOT_ATTACK)
-		e3:SetCondition(c68396121.dircon2)
-		c:RegisterEffect(e3)
 	end
 end
-function c68396121.dircon(e)
-	return e:GetHandler():GetAttackAnnouncedCount()>0
-end
-function c68396121.dircon2(e)
-	return e:GetHandler():IsDirectAttacked()
-end
+

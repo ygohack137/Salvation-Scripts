@@ -1,5 +1,6 @@
 --世界樹
 function c5973663.initial_effect(c)
+	c:EnableCounterPermit(0x18)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -8,9 +9,8 @@ function c5973663.initial_effect(c)
 	--add counter
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCode(EVENT_DESTROY)
+	e2:SetCode(EVENT_DESTROYED)
 	e2:SetCondition(c5973663.ctcon)
 	e2:SetOperation(c5973663.ctop)
 	c:RegisterEffect(e2)
@@ -49,7 +49,7 @@ function c5973663.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c5973663.ctfilter(c)
-	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE) and c:IsRace(RACE_PLANT)
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP) and bit.band(c:GetPreviousRaceOnField(),RACE_PLANT)~=0
 end
 function c5973663.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c5973663.ctfilter,1,nil)
@@ -83,7 +83,7 @@ function c5973663.op1(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(400)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		tc:RegisterEffect(e2)
 	end
 end
@@ -93,10 +93,10 @@ function c5973663.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveCounter(tp,0x18,2,REASON_COST)
 end
 function c5973663.tg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsDestructable() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c5973663.op2(e,tp,eg,ep,ev,re,r,rp)

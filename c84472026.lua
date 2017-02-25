@@ -41,7 +41,7 @@ end
 function c84472026.posop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		Duel.ChangePosition(c,POS_FACEDOWN_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEDOWN_DEFENSE)
 	end
 end
 function c84472026.indestg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -56,7 +56,7 @@ function c84472026.indesop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		e1:SetValue(1)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()

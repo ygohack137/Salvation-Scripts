@@ -55,7 +55,6 @@ function c78358521.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
 	end
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
 		c:RegisterFlagEffect(78358521,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
@@ -81,7 +80,7 @@ function c78358521.sumop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c78358521.decop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsReason(REASON_RETURN) or Duel.GetFlagEffect(tp,78358522)~=0 then return end
+	if Duel.GetFlagEffect(tp,78358522)~=0 then return end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_DECREASE_TRIBUTE)

@@ -18,6 +18,7 @@ end
 function c22567609.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,1000)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK)
 end
 function c22567609.filter(c,e,tp)
 	return c:IsCode(22567609) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)
@@ -29,9 +30,9 @@ function c22567609.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c22567609.filter,tp,LOCATION_DECK,0,nil,e,tp)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(22567609,1)) then
 		Duel.BreakEffect()
-		Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEDOWN_DEFENCE)
+		Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 		if ft>1 and g:GetCount()>1 and Duel.SelectYesNo(tp,aux.Stringid(22567609,1)) then
-			Duel.SpecialSummonStep(g:GetNext(),0,tp,tp,false,false,POS_FACEDOWN_DEFENCE)
+			Duel.SpecialSummonStep(g:GetNext(),0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 		end
 		Duel.SpecialSummonComplete()
 	end

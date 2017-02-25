@@ -25,7 +25,7 @@ function c57355219.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0
 end
 function c57355219.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_FUSION) and c:IsAbleToRemoveAsCost()
+	return c:IsFaceup() and c:IsType(TYPE_FUSION) and c:IsAbleToRemoveAsCost() and not c:IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c57355219.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c57355219.cfilter,tp,LOCATION_MZONE,0,1,nil) end
@@ -65,8 +65,7 @@ function c57355219.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c57355219.activate2(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 	local tc=e:GetLabelObject()

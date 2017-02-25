@@ -34,11 +34,10 @@ end
 function c87602890.otfilter(c)
 	return bit.band(c:GetSummonType(),SUMMON_TYPE_ADVANCE)==SUMMON_TYPE_ADVANCE
 end
-function c87602890.otcon(e,c)
+function c87602890.otcon(e,c,minc)
 	if c==nil then return true end
 	local mg=Duel.GetMatchingGroup(c87602890.otfilter,0,LOCATION_MZONE,LOCATION_MZONE,nil)
-	return c:GetLevel()>6 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-1
-		and Duel.GetTributeCount(c,mg)>0
+	return c:GetLevel()>6 and minc<=1 and Duel.CheckTribute(c,1,1,mg)
 end
 function c87602890.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c87602890.otfilter,0,LOCATION_MZONE,LOCATION_MZONE,nil)
@@ -50,21 +49,19 @@ function c87602890.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_ADVANCE
 end
 function c87602890.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsDestructable() end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c87602890.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		local att=0
-		if tc:IsFaceup() then att=tc:GetAttribute() end
-		if Duel.Destroy(tc,REASON_EFFECT)==0 or bit.band(att,ATTRIBUTE_LIGHT)==0 then return end
-		local lv=tc:GetLevel()
+		if Duel.Destroy(tc,REASON_EFFECT)==0 or bit.band(tc:GetPreviousAttributeOnField(),ATTRIBUTE_LIGHT)==0 then return end
+		local lv=tc:GetOriginalLevel()
 		if tc:IsType(TYPE_XYZ) then
-			lv=tc:GetRank()
+			lv=tc:GetOriginalRank()
 		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local g1=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_EXTRA,0,lv,lv,nil)

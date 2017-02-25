@@ -27,9 +27,12 @@ end
 function c59718521.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0
 end
+function c59718521.filter(c)
+	return c:IsRace(RACE_PSYCHO) and not c:IsStatus(STATUS_BATTLE_DESTROYED)
+end
 function c59718521.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsRace,1,nil,RACE_PSYCHO) end
-	local g=Duel.SelectReleaseGroup(tp,Card.IsRace,1,1,nil,RACE_PSYCHO)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,c59718521.filter,1,nil) end
+	local g=Duel.SelectReleaseGroup(tp,c59718521.filter,1,1,nil)
 	Duel.Release(g,REASON_COST)
 end
 function c59718521.target1(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -52,8 +55,7 @@ function c59718521.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c59718521.activate2(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

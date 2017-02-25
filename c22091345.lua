@@ -13,7 +13,7 @@ function c22091345.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c22091345.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()~=1 and Duel.GetCurrentPhase()==PHASE_MAIN1
+	return Duel.IsAbleToEnterBP()
 end
 function c22091345.filter(c)
 	return c:IsFaceup() and not c:IsHasEffect(EFFECT_PIERCE)
@@ -30,7 +30,7 @@ function c22091345.operation(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_PIERCE)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 	end
 end

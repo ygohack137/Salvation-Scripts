@@ -30,9 +30,9 @@ function c15475415.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c15475415.spop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
-		Duel.SpecialSummon(e:GetHandler(),1,tp,tp,false,false,POS_FACEUP)
-	end
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP)
 end
 function c15475415.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
@@ -43,6 +43,6 @@ function c15475415.ctop(e,tp,eg,ep,ev,re,r,rp)
 	for i=1,2 do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local sg=g:Select(tp,1,1,nil)
-		sg:GetFirst():AddCounter(0xe,1)
+		sg:GetFirst():AddCounter(0x100e,1)
 	end
 end

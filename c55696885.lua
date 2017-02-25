@@ -12,10 +12,10 @@ function c55696885.initial_effect(c)
 end
 function c55696885.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
-	e1:SetCode(EFFECT_SET_ATTACK)
+	e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 	e1:SetValue(c:GetBaseAttack()*2)
 	e1:SetReset(RESET_EVENT+0x1ff0000)
 	c:RegisterEffect(e1)
@@ -35,5 +35,8 @@ function c55696885.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c55696885.desop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.Destroy(c,REASON_EFFECT)
+	end
 end

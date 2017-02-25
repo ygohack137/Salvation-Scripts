@@ -37,9 +37,9 @@ function c55277252.op(e,tp,eg,ep,ev,re,r,rp)
 		local sg=g:Select(tp,1,1,e:GetHandler())
 		Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)
 	end
-	if e:GetHandler():IsRelateToEffect(e) then
-		Duel.SpecialSummon(e:GetHandler(),1,tp,tp,false,false,POS_FACEUP)
-	end
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP)
 end
 function c55277252.con2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1

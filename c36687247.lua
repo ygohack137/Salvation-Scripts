@@ -12,6 +12,7 @@ function c36687247.initial_effect(c)
 	--to grave
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetOperation(c36687247.regop)
 	c:RegisterEffect(e2)
@@ -37,7 +38,7 @@ function c36687247.regop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c36687247.filter(c)
-	return c:IsSetCard(0x27) and c:GetCode()~=36687247 and c:IsAbleToHand()
+	return c:IsSetCard(0x27) and c:GetCode()~=36687247 and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c36687247.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c36687247.filter,tp,LOCATION_DECK,0,1,nil) end

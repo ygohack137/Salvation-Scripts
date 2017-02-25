@@ -1,4 +1,4 @@
---アルカナフォースXVIII－THE MOON
+--アルカナフォースⅩⅧ－THE MOON
 function c97452817.initial_effect(c)
 	--coin
 	local e1=Effect.CreateEffect(c)
@@ -41,7 +41,7 @@ function c97452817.arcanareg(c,coin)
 	e1:SetCondition(c97452817.spcon)
 	e1:SetTarget(c97452817.sptg)
 	e1:SetOperation(c97452817.spop)
-	e1:SetReset(RESET_EVENT+0x1ff0000)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
 	--
 	local e2=Effect.CreateEffect(c)
@@ -55,9 +55,9 @@ function c97452817.arcanareg(c,coin)
 	e2:SetCondition(c97452817.ctcon)
 	e2:SetTarget(c97452817.cttg)
 	e2:SetOperation(c97452817.ctop)
-	e2:SetReset(RESET_EVENT+0x1ff0000)
+	e2:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e2)
-	c:RegisterFlagEffect(36690018,RESET_EVENT+0x1ff0000,EFFECT_FLAG_CLIENT_HINT,1,coin,63-coin)
+	c:RegisterFlagEffect(36690018,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,coin,63-coin)
 end
 function c97452817.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp and e:GetHandler():GetFlagEffectLabel(36690018)==1
@@ -86,9 +86,7 @@ function c97452817.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c97452817.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsControler(tp) and not Duel.GetControl(tc,1-tp) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc:IsRelateToEffect(e) and tc:IsControler(tp) then
+		Duel.GetControl(tc,1-tp)
 	end
 end

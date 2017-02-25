@@ -7,6 +7,7 @@ function c35798491.initial_effect(c)
 	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
+	e1:SetCondition(c35798491.mtcon)
 	e1:SetOperation(c35798491.mtop)
 	c:RegisterEffect(e1)
 	--disable and destroy
@@ -17,12 +18,14 @@ function c35798491.initial_effect(c)
 	e2:SetOperation(c35798491.disop)
 	c:RegisterEffect(e2)
 end
+function c35798491.mtcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
 function c35798491.mtop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnPlayer()~=tp then return end
 	if Duel.CheckLPCost(tp,500) then
 		Duel.PayLPCost(tp,500)
 	else
-		Duel.Destroy(e:GetHandler(),REASON_RULE)
+		Duel.Destroy(e:GetHandler(),REASON_COST)
 	end
 end
 function c35798491.filter(c,tp)
@@ -36,8 +39,7 @@ function c35798491.disop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	local dc=Duel.TossDice(tp,1)
 	if dc==1 or dc==3 or dc==6 then
-		Duel.NegateEffect(ev)
-		if rc:IsRelateToEffect(re) then
+		if Duel.NegateEffect(ev) and rc:IsRelateToEffect(re) then
 			Duel.Destroy(rc,REASON_EFFECT)
 		end
 	end

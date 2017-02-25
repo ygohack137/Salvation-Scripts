@@ -8,6 +8,7 @@ function c35952884.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e1:SetValue(aux.synlimit)
 	c:RegisterEffect(e1)
 	--multi attack
 	local e2=Effect.CreateEffect(c)
@@ -85,8 +86,7 @@ function c35952884.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c35952884.disop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end
@@ -94,7 +94,7 @@ function c35952884.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c35952884.filter(c,e,tp)
-	return c:GetCode()==24696097 and c:IsCanBeSpecialSummoned(e,0,tp,false,true)
+	return c:IsCode(24696097) and c:IsCanBeSpecialSummoned(e,0,tp,false,true)
 end
 function c35952884.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

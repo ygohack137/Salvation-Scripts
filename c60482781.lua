@@ -21,7 +21,7 @@ c60482781.lvdncount=2
 c60482781.lvdn={47507260,74591968}
 function c60482781.descon(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
-	return e:GetHandler()==Duel.GetAttacker() and d and d:IsFacedown() and d:IsDefencePos()
+	return e:GetHandler()==Duel.GetAttacker() and d and d:IsFacedown() and d:IsDefensePos()
 end
 function c60482781.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -37,7 +37,7 @@ function c60482781.desop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c60482781.sumcon(e,c)
+function c60482781.sumcon(e,c,minc)
 	if not c then return true end
 	return false
 end

@@ -7,7 +7,7 @@ function c49868263.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(49868263,0))
 	e1:SetCategory(CATEGORY_DISABLE)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(c49868263.discon)
@@ -59,8 +59,7 @@ function c49868263.disop2(e,tp,eg,ep,ev,re,r,rp)
 	if re:IsActiveType(TYPE_SPELL) and re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
 		local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 		if g and g:IsContains(e:GetHandler()) then
-			Duel.NegateEffect(ev)
-			if re:GetHandler():IsRelateToEffect(re) then
+			if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
 				Duel.Destroy(re:GetHandler(),REASON_EFFECT)
 			end
 		end

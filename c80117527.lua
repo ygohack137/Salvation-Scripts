@@ -24,8 +24,8 @@ function c80117527.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
-	e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END)
+	e1:SetCode(EFFECT_CANNOT_ATTACK)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	e:GetHandler():RegisterEffect(e1)
 end
 function c80117527.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -37,9 +37,7 @@ function c80117527.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c80117527.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and not Duel.GetControl(tc,tp) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc:IsRelateToEffect(e) then
+		Duel.GetControl(tc,tp)
 	end
 end

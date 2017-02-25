@@ -14,7 +14,8 @@ function c60228941.condition(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(e:GetHandler():GetPreviousControler())
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND) and bit.band(r,0x4040)==0x4040
 end
-function c60228941.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c60228941.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_GRAVE) and c60228941.filter2(chkc,e,tp) end
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 	if tp~=rp and tp==e:GetLabel() and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -27,7 +28,6 @@ function c60228941.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 	else
 		e:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-		e:SetProperty(0)
 	end
 end
 function c60228941.filter1(c)
@@ -45,7 +45,7 @@ function c60228941.operation(e,tp,eg,ep,ev,re,r,rp)
 		local tc=Duel.GetFirstTarget()
 		if tc and tc:IsRelateToEffect(e) then
 			Duel.BreakEffect()
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENCE)
+			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
 	end
 end

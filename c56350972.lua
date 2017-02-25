@@ -6,6 +6,7 @@ function c56350972.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetCondition(c56350972.regcon1)
 	e1:SetOperation(c56350972.regop)
 	c:RegisterEffect(e1)
@@ -14,6 +15,7 @@ function c56350972.initial_effect(c)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetCondition(c56350972.regcon2)
 	e2:SetOperation(c56350972.regop)
 	c:RegisterEffect(e2)
@@ -70,11 +72,14 @@ function c56350972.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sel=opval[op]
 	e:SetLabel(sel)
 	if sel==1 then
+		e:SetCategory(CATEGORY_DRAW+CATEGORY_HANDES)
 		Duel.SetOperationInfo(0,CATEGORY_DRAW,0,0,tp,2)
 		Duel.SetOperationInfo(0,CATEGORY_HANDES,0,0,tp,1)
 	elseif sel==2 then
+		e:SetCategory(CATEGORY_HANDES)
 		Duel.SetOperationInfo(0,CATEGORY_HANDES,0,0,1-tp,1)
 	else
+		e:SetCategory(CATEGORY_TOHAND)
 		Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
 	end
 end

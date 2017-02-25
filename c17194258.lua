@@ -11,14 +11,11 @@ function c17194258.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c17194258.filter1(c,tp)
-	return c.material_count and Duel.IsExistingMatchingCard(c17194258.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c)
+	return c.material and Duel.IsExistingMatchingCard(c17194258.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c)
 end
 function c17194258.filter2(c,fc)
-	if c:IsForbidden() or not c:IsAbleToHand() or c:IsHasEffect(EFFECT_NECRO_VALLEY) then return false end
-	for i=1,fc.material_count do
-		if c:IsCode(fc.material[i]) then return true end
-	end
-	return false
+	if c:IsForbidden() or not c:IsAbleToHand() then return false end
+	return c:IsCode(table.unpack(fc.material))
 end
 function c17194258.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c17194258.filter1,tp,LOCATION_EXTRA,0,1,nil,tp) end
@@ -30,10 +27,12 @@ function c17194258.activate(e,tp,eg,ep,ev,re,r,rp)
 	if cg:GetCount()==0 then return end
 	Duel.ConfirmCards(1-tp,cg)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c17194258.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,cg:GetFirst())
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c17194258.filter2),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,cg:GetFirst())
 	local tc=g:GetFirst()
-	if tc and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
+	if not tc then return end
+	if Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
 		Duel.ConfirmCards(1-tp,tc)
+		if not e:IsHasType(EFFECT_TYPE_ACTIVATE) then return end
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_CANNOT_SUMMON)
@@ -59,5 +58,5 @@ function c17194258.sumlimit(e,c)
 	return c:IsCode(e:GetLabel())
 end
 function c17194258.aclimit(e,re,tp)
-	return re:GetHandler():IsCode(e:GetLabel()) and re:IsActiveType(TYPE_MONSTER)
+	return re:GetHandler():IsCode(e:GetLabel()) and re:IsActiveType(TYPE_MONSTER) and not re:GetHandler():IsImmuneToEffect(e)
 end

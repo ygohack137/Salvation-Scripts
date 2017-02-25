@@ -11,7 +11,7 @@ function c46239604.initial_effect(c)
 	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(46239604,0))
-	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
 	e2:SetCode(EVENT_TO_GRAVE)
@@ -19,15 +19,13 @@ function c46239604.initial_effect(c)
 	e2:SetTarget(c46239604.target)
 	e2:SetOperation(c46239604.operation)
 	c:RegisterEffect(e2)
-	--at limit
+	--atlimit
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
-	e3:SetTarget(c46239604.atlimit)
-	e3:SetValue(aux.imval1)
+	e3:SetTargetRange(0,LOCATION_MZONE)
+	e3:SetValue(c46239604.atlimit)
 	c:RegisterEffect(e3)
 end
 function c46239604.atlimit(e,c)
@@ -37,7 +35,7 @@ function c46239604.condition(e,tp,eg,ep,ev,re,r,rp,chk)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c46239604.filter(c)
-	return c:IsSetCard(0x12) and c:GetCode()~=46239604 and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsSetCard(0x12) and not c:IsCode(46239604) and c:IsAbleToHand()
 end
 function c46239604.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c46239604.filter,tp,LOCATION_GRAVE+LOCATION_DECK,0,1,nil) end
@@ -45,7 +43,7 @@ function c46239604.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c46239604.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c46239604.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c46239604.filter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)

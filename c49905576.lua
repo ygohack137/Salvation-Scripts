@@ -9,11 +9,11 @@ function c49905576.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c49905576.drop(e,tp,eg,ep,ev,re,r,rp)
-	if not re:GetHandler():IsType(TYPE_COUNTER) then return end
-	Duel.BreakEffect()
+	local c=e:GetHandler()
+	if not re:GetHandler():IsType(TYPE_COUNTER) or not c:IsLocation(LOCATION_MZONE) or not c:IsFaceup() then return end
 	Duel.Recover(tp,1000,REASON_EFFECT)
 	if not Duel.IsEnvironment(56433456) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.Destroy(g,REASON_EFFECT)
 end

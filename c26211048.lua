@@ -20,12 +20,15 @@ function c26211048.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
+function c26211048.eqfilter(c)
+	return c:IsLocation(LOCATION_MZONE) or c:IsLocation(LOCATION_GRAVE) and not c:IsForbidden()
+end
 function c26211048.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsType(TYPE_MONSTER) end
+	if chkc then return c26211048.eqfilter(chkc) and chkc:IsControler(1-tp) and chkc:IsType(TYPE_MONSTER) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-		and Duel.IsExistingTarget(Card.IsType,tp,0,LOCATION_GRAVE+LOCATION_MZONE,1,nil,TYPE_MONSTER) end
+		and Duel.IsExistingTarget(c26211048.eqfilter,tp,0,LOCATION_GRAVE+LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectTarget(tp,Card.IsType,tp,0,LOCATION_GRAVE+LOCATION_MZONE,1,1,nil,TYPE_MONSTER)
+	local g=Duel.SelectTarget(tp,c26211048.eqfilter,tp,0,LOCATION_GRAVE+LOCATION_MZONE,1,1,nil)
 	if g:GetFirst():IsLocation(LOCATION_GRAVE) then
 		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 	end
@@ -33,7 +36,7 @@ end
 function c26211048.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) then return end
+	if not tc:IsRelateToEffect(e) or not tc:IsType(TYPE_MONSTER) then return end
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or c:IsFacedown() or not c:IsRelateToEffect(e) then
 		if tc:IsLocation(LOCATION_MZONE) then Duel.SendtoGrave(tc,REASON_EFFECT) end
 		return
@@ -55,11 +58,11 @@ function c26211048.eqop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		e2:SetValue(atk)
 		tc:RegisterEffect(e2)
-		local def=tc:GetTextDefence()/2
+		local def=tc:GetTextDefense()/2
 		if def<0 then def=0 end
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_EQUIP)
-		e3:SetCode(EFFECT_UPDATE_DEFENCE)
+		e3:SetCode(EFFECT_UPDATE_DEFENSE)
 		e3:SetReset(RESET_EVENT+0x1fe0000)
 		e3:SetValue(def)
 		tc:RegisterEffect(e3)

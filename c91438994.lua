@@ -1,5 +1,6 @@
 --A・ジェネクス・ベルフレイム
 function c91438994.initial_effect(c)
+	c:EnableCounterPermit(0xa)
 	--add counter
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)

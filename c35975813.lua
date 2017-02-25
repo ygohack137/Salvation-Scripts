@@ -16,6 +16,7 @@ function c35975813.initial_effect(c)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
+	e3:SetCondition(c35975813.mtcon)
 	e3:SetOperation(c35975813.mtop)
 	c:RegisterEffect(e3)
 	--disable and destroy
@@ -39,12 +40,14 @@ end
 function c35975813.excon(e)
 	return not Duel.IsExistingMatchingCard(c35975813.exfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
+function c35975813.mtcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
 function c35975813.mtop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnPlayer()~=tp then return end
 	if Duel.CheckLPCost(tp,800) then
 		Duel.PayLPCost(tp,800)
 	else
-		Duel.Destroy(e:GetHandler(),REASON_RULE)
+		Duel.Destroy(e:GetHandler(),REASON_COST)
 	end
 end
 function c35975813.disop(e,tp,eg,ep,ev,re,r,rp)
@@ -55,8 +58,7 @@ function c35975813.disop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	local dc=Duel.TossDice(tp,1)
 	if dc~=2 and dc~=5 then return end
-	Duel.NegateEffect(ev)
-	if rc:IsRelateToEffect(re) then
+	if Duel.NegateEffect(ev) and rc:IsRelateToEffect(re) then
 		Duel.Destroy(rc,REASON_EFFECT)
 	end
 end

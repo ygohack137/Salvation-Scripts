@@ -6,7 +6,7 @@ function c88240999.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c88240999.splimit)
+	e1:SetValue(aux.ritlimit)
 	c:RegisterEffect(e1)
 	--boost
 	local e2=Effect.CreateEffect(c)
@@ -35,9 +35,6 @@ function c88240999.initial_effect(c)
 	e3:SetOperation(c88240999.desop)
 	c:RegisterEffect(e3)
 end
-function c88240999.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_RITUAL)==SUMMON_TYPE_RITUAL
-end
 function c88240999.mat_filter(c)
 	return c:GetLevel()~=10
 end
@@ -65,15 +62,15 @@ function c88240999.adop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetValue(1000)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		tc:RegisterEffect(e2)
 	end
 end
 function c88240999.desfilter(c)
-	return c:IsFacedown() and c:IsDestructable() and c:IsAbleToRemove()
+	return c:IsFacedown() and c:IsAbleToRemove()
 end
 function c88240999.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and c88240999.desfilter(chkc) end

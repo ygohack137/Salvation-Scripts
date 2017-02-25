@@ -13,7 +13,7 @@ function c90361010.initial_effect(c)
 	--tohand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(90361010,1))
-	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_TO_GRAVE)
@@ -61,7 +61,7 @@ function c90361010.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c90361010.thfilter(c)
-	return c:IsSetCard(0x9a) and not c:IsCode(90361010) and c:IsAbleToHand()
+	return c:IsSetCard(0x9a) and not c:IsCode(90361010) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c90361010.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c90361010.thfilter,tp,LOCATION_DECK,0,1,nil) end

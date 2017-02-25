@@ -1,5 +1,6 @@
---巨大戦艦 ビッグ・コアＭｋ－ＩＩ
+--巨大戦艦 ビッグ・コアMk－Ⅱ
 function c75937826.initial_effect(c)
+	c:EnableCounterPermit(0x1f)
 	--spsummon success
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(75937826,0))

@@ -2,9 +2,11 @@
 function c26285788.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,26285788+EFFECT_COUNT_CODE_OATH)
+	e1:SetTarget(c26285788.target)
 	e1:SetOperation(c26285788.activate)
 	c:RegisterEffect(e1)
 	if c26285788.global_effect==nil then
@@ -26,6 +28,9 @@ function c26285788.addcount(e,tp,eg,ep,ev,re,r,rp)
 		c=eg:GetNext()
 	end
 end
+function c26285788.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) end
+end
 function c26285788.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
@@ -41,10 +46,10 @@ function c26285788.effectcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,26285789)>0
 end
 function c26285788.filter1(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c26285788.filter2(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup()
 end
 function c26285788.effectop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,26285788)
@@ -52,7 +57,7 @@ function c26285788.effectop(e,tp,eg,ep,ev,re,r,rp)
 	if ct==1 then
 		Duel.Draw(tp,1,REASON_EFFECT)
 	elseif ct==2 then
-		local g=Duel.GetMatchingGroup(c26285788.filter1,tp,LOCATION_GRAVE,0,nil)
+		local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c26285788.filter1),tp,LOCATION_GRAVE,0,nil)
 		if g:GetCount()>1 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local tg=g:Select(tp,2,2,nil)

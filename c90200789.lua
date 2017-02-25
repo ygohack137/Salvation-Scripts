@@ -45,6 +45,7 @@ function c90200789.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g2=Duel.SelectTarget(tp,c90200789.filter2,tp,0,LOCATION_MZONE,1,1,nil,g1:GetFirst():GetLevel(),mlv)
 	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g1,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c90200789.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -63,10 +64,10 @@ function c90200789.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c90200789.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,lv)
 	local tc=g:GetFirst()
-	if tc then
+	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		Duel.BreakEffect()
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		c:SetCardTarget(tc)
+		Duel.SpecialSummonComplete()
 	end
 end
 function c90200789.desop(e,tp,eg,ep,ev,re,r,rp)

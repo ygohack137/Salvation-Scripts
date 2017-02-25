@@ -10,7 +10,7 @@ function c46772449.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(TIMING_SPSUMMON)
+	e1:SetHintTiming(TIMING_SPSUMMON,TIMING_BATTLE_START)
 	e1:SetCondition(c46772449.condition)
 	e1:SetCost(c46772449.cost)
 	e1:SetTarget(c46772449.target)
@@ -25,7 +25,7 @@ function c46772449.condition(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetTurnPlayer()==tp then
 		return ph==PHASE_MAIN1 or ph==PHASE_MAIN2
 	else
-		return ph==PHASE_BATTLE
+		return (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE)
 	end
 end
 function c46772449.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -35,8 +35,8 @@ function c46772449.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RegisterFlagEffect(46772449,RESET_CHAIN,0,1)
 end
 function c46772449.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c46772449.operation(e,tp,eg,ep,ev,re,r,rp)
@@ -48,6 +48,10 @@ function c46772449.operation(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(0)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_NO_EFFECT_DAMAGE)
+	e2:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e2,tp)
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
 	Duel.Destroy(g,REASON_EFFECT)
 end

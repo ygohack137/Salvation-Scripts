@@ -24,8 +24,9 @@ function c10691144.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	while tc do
 		local ploc=tc:GetPreviousLocation()
-		if tc:IsReason(REASON_EFFECT) and not tc:IsReason(REASON_REDIRECT) and bit.band(ploc,0x1e)~=0
-			and tc:GetPreviousControler()==tp and tc:GetReasonEffect():GetOwner():IsType(TYPE_MONSTER) then
+		local te=tc:GetReasonEffect()
+		if tc:IsReason(REASON_EFFECT) and not tc:IsReason(REASON_REDIRECT) and bit.band(ploc,0x1e)~=0 and tc:GetPreviousControler()==tp
+			and te:GetOwnerPlayer()==1-tp and te:IsActiveType(TYPE_MONSTER) and te:IsActivated() then
 			flag=bit.bor(flag,ploc)
 		end
 		tc=eg:GetNext()

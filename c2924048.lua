@@ -11,7 +11,7 @@ function c2924048.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c2924048.cfilter(c)
-	return c:IsPosition(POS_FACEUP_DEFENCE) and c:IsSetCard(0x11)
+	return c:IsPosition(POS_FACEUP_DEFENSE) and c:IsSetCard(0x11)
 end
 function c2924048.condition(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp or not Duel.IsExistingMatchingCard(c2924048.cfilter,tp,LOCATION_MZONE,0,1,nil) then return false end
@@ -25,8 +25,7 @@ function c2924048.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c2924048.activate(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

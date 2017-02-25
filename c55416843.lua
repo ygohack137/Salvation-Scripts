@@ -11,7 +11,6 @@ function c55416843.initial_effect(c)
 end
 function c55416843.filter(c,e,tp)
 	return c:GetLevel()==5 and c:IsRace(RACE_WARRIOR) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c55416843.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -24,7 +23,7 @@ function c55416843.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if ft>2 then ft=2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c55416843.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,ft,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c55416843.filter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,ft,nil,e,tp)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
 		while tc do

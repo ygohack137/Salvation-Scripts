@@ -24,18 +24,17 @@ end
 function c5186893.otfilter(c,tp)
 	return c:IsRace(RACE_ZOMBIE) and (c:IsControler(tp) or c:IsFaceup())
 end
-function c5186893.otcon(e,c)
+function c5186893.otcon(e,c,minc)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local mg=Duel.GetMatchingGroup(c5186893.otfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
-	return c:GetLevel()>6 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.GetTributeCount(c,mg)>0
+	return c:GetLevel()>6 and minc<=1 and Duel.CheckTribute(c,1,1,mg)
 end
 function c5186893.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c5186893.otfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
 	local sg=Duel.SelectTribute(tp,c,1,1,mg)
 	c:SetMaterial(sg)
-	Duel.Release(sg, REASON_SUMMON+REASON_MATERIAL)
+	Duel.Release(sg,REASON_SUMMON+REASON_MATERIAL)
 end
 function c5186893.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -43,14 +42,14 @@ function c5186893.spcon(e,tp,eg,ep,ev,re,r,rp)
 	if c==tc then tc=Duel.GetAttackTarget() end
 	e:SetLabelObject(tc)
 	if not c:IsRelateToBattle() or c:IsFacedown() then return false end
-	return tc:GetLocation()==LOCATION_GRAVE and tc:IsRace(RACE_ZOMBIE)
+	return tc:IsLocation(LOCATION_GRAVE) and tc:IsRace(RACE_ZOMBIE)
 end
 function c5186893.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetLabelObject()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	tc:CreateEffectRelation(e)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,0,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,0,0)
 end
 function c5186893.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()

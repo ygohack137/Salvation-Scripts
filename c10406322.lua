@@ -6,7 +6,7 @@ function c10406322.initial_effect(c)
 	--announce
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(10406322,0))
-	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_DECKDES)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
@@ -32,14 +32,16 @@ function c10406322.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) end
 	Duel.Hint(HINT_SELECTMSG,tp,0)
 	local ac=Duel.AnnounceCard(tp)
-	e:SetLabel(ac)
+	Duel.SetTargetParam(ac)
+	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD)
 end
 function c10406322.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsPlayerCanDiscardDeck(tp,1) then return end
 	Duel.ConfirmDecktop(tp,1)
 	local g=Duel.GetDecktopGroup(tp,1)
 	local tc=g:GetFirst()
-	if tc:GetCode()==e:GetLabel() and tc:IsAbleToHand() then
+	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+	if tc:IsCode(ac) and tc:IsAbleToHand() then
 		Duel.DisableShuffleCheck()
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ShuffleHand(tp)

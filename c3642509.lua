@@ -2,7 +2,7 @@
 function c3642509.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsSetCard,0x3008),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WIND),true)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x3008),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_WIND),true)
 	--atk up
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(3642509,0))
@@ -17,12 +17,10 @@ function c3642509.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e3:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e3:SetValue(c3642509.splimit)
+	e3:SetValue(aux.fuslimit)
 	c:RegisterEffect(e3)
 end
-function c3642509.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
-end
+c3642509.material_setcode=0x8
 function c3642509.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
@@ -32,7 +30,7 @@ function c3642509.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=tg:GetFirst()
 	while tc do
 		local atk=tc:GetAttack()
-		local def=tc:GetDefence()
+		local def=tc:GetDefense()
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -41,7 +39,7 @@ function c3642509.atkop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_SET_DEFENCE_FINAL)
+		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
 		e2:SetValue(def/2)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e2)

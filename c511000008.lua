@@ -35,11 +35,11 @@ function c511000008.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not c:IsRelateToEffect(e) or not tc:IsRelateToEffect(e) then return end
 	local g=Group.FromCards(c,tc)
-	Duel.ChangePosition(g,POS_FACEUP_DEFENCE)
+	Duel.ChangePosition(g,POS_FACEUP_DEFENSE)
 end
 function c511000008.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return bit.band(c:GetPreviousPosition(),POS_ATTACK)~=0 and c:IsFaceup() and c:IsDefencePos()
+	return bit.band(c:GetPreviousPosition(),POS_ATTACK)~=0 and c:IsFaceup() and c:IsDefensePos()
 end
 function c511000008.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

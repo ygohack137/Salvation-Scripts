@@ -85,9 +85,8 @@ function c93108839.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c93108839.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP_ATTACK)
-	end
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP_ATTACK)
 end
 function c93108839.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and eg:GetFirst()==e:GetHandler():GetEquipTarget()

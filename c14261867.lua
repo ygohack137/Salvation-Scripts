@@ -28,13 +28,13 @@ end
 function c14261867.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and c:IsFaceup() then
-		Duel.ChangePosition(c,POS_FACEDOWN_DEFENCE)
+		Duel.ChangePosition(c,POS_FACEDOWN_DEFENSE)
 	end
 end
 function c14261867.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
-	return c==Duel.GetAttacker() and bc and bc:GetBattlePosition()==POS_FACEDOWN_DEFENCE
+	return c==Duel.GetAttacker() and bc and bc:GetBattlePosition()==POS_FACEDOWN_DEFENSE
 end
 function c14261867.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -42,7 +42,7 @@ function c14261867.atkop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetReset(RESET_PHASE+RESET_DAMAGE_CAL)
+		e1:SetReset(RESET_PHASE+PHASE_DAMAGE_CAL)
 		e1:SetValue(2400)
 		c:RegisterEffect(e1)
 	end

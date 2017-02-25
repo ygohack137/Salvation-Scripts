@@ -24,7 +24,7 @@ function c82308875.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,2)
 end
 function c82308875.spfilter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c82308875.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -32,13 +32,13 @@ function c82308875.operation(e,tp,eg,ep,ev,re,r,rp)
 	if d2>d1 then d1,d2=d2,d1 end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SET_ATTACK)
+	e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 	e1:SetValue(d1*700)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,2)
 	c:RegisterEffect(e1)
 	if d1+d2==7 then
 		local b1=Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,LOCATION_ONFIELD)>1
-		local spg=Duel.GetMatchingGroup(c82308875.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,LOCATION_GRAVE,nil,e,tp)
+		local spg=Duel.GetMatchingGroup(aux.NecroValleyFilter(c82308875.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,LOCATION_GRAVE,nil,e,tp)
 		local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and spg:GetCount()>0
 		local b3=Duel.IsPlayerCanDraw(tp,3)
 		if not b1 and not b2 and not b3 then return end

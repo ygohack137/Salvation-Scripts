@@ -9,7 +9,7 @@ function c37694547.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_DECREASE_TRIBUTE)
-	e2:SetRange(LOCATION_SZONE)
+	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_HAND,LOCATION_HAND)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x7))
 	e2:SetValue(0x1)
@@ -31,7 +31,6 @@ function c37694547.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c37694547.filter(c,e,tp)
 	return c:IsSetCard(0x7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and (not c:IsLocation(LOCATION_GRAVE) or not c:IsHasEffect(EFFECT_NECRO_VALLEY))
 end
 function c37694547.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -40,7 +39,7 @@ function c37694547.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c37694547.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c37694547.filter,tp,0x13,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c37694547.filter),tp,0x13,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		Duel.ShuffleDeck(tp)

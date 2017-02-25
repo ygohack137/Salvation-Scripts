@@ -19,11 +19,11 @@ function c68450517.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
 	e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	e:GetHandler():RegisterEffect(e1)
 end
 function c68450517.filter(c,att)
-	return c:IsPosition(POS_FACEUP_ATTACK) and c:IsAttribute(att) and c:IsDestructable()
+	return c:IsPosition(POS_FACEUP_ATTACK) and c:IsAttribute(att)
 end
 function c68450517.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp)

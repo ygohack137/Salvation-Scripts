@@ -48,11 +48,11 @@ function c12940613.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		tc:RegisterEffect(e2)
 		tc=g:GetNext()
 	end
-	local dg=Duel.GetMatchingGroup(c12940613.tdfilter2,tp,LOCATION_GRAVE,0,nil)
+	local dg=Duel.GetMatchingGroup(aux.NecroValleyFilter(c12940613.tdfilter2),tp,LOCATION_GRAVE,0,nil)
 	if dg:GetCount()~=0 and Duel.SelectYesNo(tp,aux.Stringid(12940613,0)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)

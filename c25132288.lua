@@ -19,7 +19,7 @@ function c25132288.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=c:GetBattleTarget()
 	e:SetLabelObject(tc)
-	return tc and c:GetAttack()>=500 and c:GetDefence()>=500 and tc:IsFaceup() and (tc:GetAttack()>0 or tc:GetDefence()>0)
+	return tc and c:GetAttack()>=500 and c:GetDefense()>=500 and tc:IsFaceup() and (tc:GetAttack()>0 or tc:GetDefense()>0)
 end
 function c25132288.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -28,8 +28,7 @@ end
 function c25132288.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=e:GetLabelObject()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsFaceup()
-		and c:GetAttack()>=500 and c:GetDefence()>=500 then
+	if c:IsRelateToEffect(e) and c:IsFaceup() and c:GetAttack()>=500 and c:GetDefense()>=500 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
@@ -38,16 +37,18 @@ function c25132288.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(-500)
 		c:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
 		c:RegisterEffect(e2)
-		local e3=Effect.CreateEffect(c)
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		e3:SetCode(EFFECT_UPDATE_ATTACK)
-		e3:SetValue(-1500)
-		tc:RegisterEffect(e3)
-		local e4=e3:Clone()
-		e4:SetCode(EFFECT_UPDATE_DEFENCE)
-		tc:RegisterEffect(e4)
+		if tc:IsRelateToEffect(e) and tc:IsFaceup() and not c:IsHasEffect(EFFECT_REVERSE_UPDATE) then
+			local e3=Effect.CreateEffect(c)
+			e3:SetType(EFFECT_TYPE_SINGLE)
+			e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+			e3:SetCode(EFFECT_UPDATE_ATTACK)
+			e3:SetValue(-1500)
+			tc:RegisterEffect(e3)
+			local e4=e3:Clone()
+			e4:SetCode(EFFECT_UPDATE_DEFENSE)
+			tc:RegisterEffect(e4)
+		end
 	end
 end

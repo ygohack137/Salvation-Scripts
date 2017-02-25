@@ -66,7 +66,8 @@ function c68140974.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c68140974.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)>0 then
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)~=0 then
 		c:CompleteProcedure()
 	end
 end
@@ -90,7 +91,7 @@ end
 function c68140974.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
 		if c:IsFaceup() and c:IsRelateToEffect(e) then
 			local atk=tc:GetTextAttack()
 			if atk<0 then atk=0 end
@@ -127,8 +128,7 @@ function c68140974.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c68140974.negop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
-	if re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 end

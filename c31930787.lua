@@ -62,7 +62,8 @@ function c31930787.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c31930787.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)>0 then
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)~=0 then
 		c:CompleteProcedure()
 	end
 end
@@ -86,7 +87,7 @@ end
 function c31930787.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER)then
 		if c:IsFaceup() and c:IsRelateToEffect(e) then
 			local atk=tc:GetTextAttack()
 			if atk<0 then atk=0 end
@@ -123,7 +124,7 @@ function c31930787.dircost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=e:GetHandler():GetEquipGroup():FilterSelect(tp,c31930787.dcfilter,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
 end
-function c31930787.dirop(e,tp,eg,ep,ev,re,r,rp,chk)
+function c31930787.dirop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	local e1=Effect.CreateEffect(c)

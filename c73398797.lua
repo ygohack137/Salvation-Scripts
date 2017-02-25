@@ -24,7 +24,7 @@ function c73398797.initial_effect(c)
 end
 function c73398797.descon(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
-	return e:GetHandler()==Duel.GetAttacker() and d and d:IsPosition(POS_FACEDOWN_DEFENCE)
+	return e:GetHandler()==Duel.GetAttacker() and d and d:IsPosition(POS_FACEDOWN_DEFENSE)
 end
 function c73398797.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -58,6 +58,6 @@ function c73398797.spop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_CANNOT_ATTACK)
 	e1:SetTarget(aux.TargetBoolFunction(Card.IsCode,89631139))
 	e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e1:SetReset(RESET_PHASE+RESET_END)
+	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end

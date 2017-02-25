@@ -1,6 +1,6 @@
 --六武院
 function c53819808.initial_effect(c)
-	c:EnableCounterPermit(0x3003)
+	c:EnableCounterPermit(0x3)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -9,7 +9,7 @@ function c53819808.initial_effect(c)
 	--add counter
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetRange(LOCATION_SZONE)
+	e2:SetRange(LOCATION_FZONE)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetOperation(c53819808.ctop)
 	c:RegisterEffect(e2)
@@ -20,7 +20,7 @@ function c53819808.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_UPDATE_ATTACK)
-	e4:SetRange(LOCATION_SZONE)
+	e4:SetRange(LOCATION_FZONE)
 	e4:SetTargetRange(0,LOCATION_MZONE)
 	e4:SetValue(c53819808.val)
 	c:RegisterEffect(e4)
@@ -30,9 +30,9 @@ function c53819808.ctfilter(c)
 end
 function c53819808.ctop(e,tp,eg,ep,ev,re,r,rp)
 	if eg:IsExists(c53819808.ctfilter,1,nil) then
-		e:GetHandler():AddCounter(0x3003,1)
+		e:GetHandler():AddCounter(0x3,1)
 	end
 end
 function c53819808.val(e)
-	return e:GetHandler():GetCounter(0x3003)*-100
+	return e:GetHandler():GetCounter(0x3)*-100
 end

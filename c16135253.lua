@@ -16,7 +16,7 @@ function c16135253.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c16135253.filter(c,e,tp,lv)
 	if (lv<6 and c:GetLevel()~=lv) or (lv==6 and c:GetLevel()<6) then return false end
-	return c:IsRace(RACE_FAIRY) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsRace(RACE_FAIRY) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c16135253.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -25,7 +25,7 @@ end
 function c16135253.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local dc=Duel.TossDice(tp,1)
-	local g=Duel.GetMatchingGroup(c16135253.filter,tp,LOCATION_GRAVE,0,nil,e,tp,dc)
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c16135253.filter),tp,LOCATION_GRAVE,0,nil,e,tp,dc)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(16135253,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=g:Select(tp,1,1,nil)

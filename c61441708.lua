@@ -3,6 +3,7 @@ function c61441708.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetCode(EVENT_TO_GRAVE)
 	e1:SetOperation(c61441708.spr)
 	c:RegisterEffect(e1)
@@ -59,7 +60,7 @@ function c61441708.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
 end
 function c61441708.desfilter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
+	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c61441708.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

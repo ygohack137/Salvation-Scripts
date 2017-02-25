@@ -44,7 +44,7 @@ function c74591968.bdop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c74591968.descon(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
-	return e:GetHandler()==Duel.GetAttacker() and d and d:IsFacedown() and d:IsDefencePos()
+	return e:GetHandler()==Duel.GetAttacker() and d and d:IsFacedown() and d:IsDefensePos()
 end
 function c74591968.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -81,7 +81,7 @@ function c74591968.spop(e,tp,eg,ep,ev,re,r,rp)
 		tc:CompleteProcedure()
 	end
 end
-function c74591968.sumcon(e,c)
+function c74591968.sumcon(e,c,minc)
 	if not c then return true end
 	return false
 end

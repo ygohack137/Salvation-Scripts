@@ -2,7 +2,7 @@
 function c57477163.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,61173621,aux.FilterBoolFunction(Card.IsSetCard,0xa9),1,true,true)
+	aux.AddFusionProcCodeFun(c,61173621,aux.FilterBoolFunction(Card.IsFusionSetCard,0xa9),1,true,true)
 	--actlimit
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -32,7 +32,9 @@ function c57477163.actcon(e)
 	return Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()
 end
 function c57477163.condition(e,tp,eg,ep,ev,re,r,rp)
-	return rp~=tp and e:GetHandler():IsReason(REASON_DESTROY)
+	local c=e:GetHandler()
+	return c:IsReason(REASON_BATTLE)
+		or rp~=tp and c:IsReason(REASON_DESTROY) and c:GetPreviousControler()==tp
 end
 function c57477163.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

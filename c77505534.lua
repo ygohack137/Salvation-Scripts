@@ -2,6 +2,7 @@
 function c77505534.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_TOGRAVE+CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,0x11e8)
@@ -28,7 +29,7 @@ function c77505534.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 			local sg=tg:Select(tp,1,5,nil)
-			Duel.ChangePosition(sg,POS_FACEUP_DEFENCE)
+			Duel.ChangePosition(sg,POS_FACEUP_DEFENSE)
 		end
 	end
 end

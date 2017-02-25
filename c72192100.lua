@@ -7,6 +7,7 @@ function c72192100.initial_effect(c)
 	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
+	e1:SetCondition(c72192100.mtcon)
 	e1:SetOperation(c72192100.mtop)
 	c:RegisterEffect(e1)
 	--disable and destroy
@@ -20,7 +21,7 @@ function c72192100.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetDescription(aux.Stringid(72192100,0))
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetRange(LOCATION_HAND)
@@ -29,12 +30,14 @@ function c72192100.initial_effect(c)
 	e3:SetOperation(c72192100.spop)
 	c:RegisterEffect(e3)
 end
+function c72192100.mtcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
 function c72192100.mtop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetTurnPlayer()~=tp then return end
 	if Duel.CheckLPCost(tp,500) then
 		Duel.PayLPCost(tp,500)
 	else
-		Duel.Destroy(e:GetHandler(),REASON_RULE)
+		Duel.Destroy(e:GetHandler(),REASON_COST)
 	end
 end
 function c72192100.disop(e,tp,eg,ep,ev,re,r,rp)
@@ -45,8 +48,7 @@ function c72192100.disop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	local dc=Duel.TossDice(tp,1)
 	if dc~=3 then return end
-	Duel.NegateEffect(ev)
-	if rc:IsRelateToEffect(re) then
+	if Duel.NegateEffect(ev) and rc:IsRelateToEffect(re) then
 		Duel.Destroy(rc,REASON_EFFECT)
 	end
 end

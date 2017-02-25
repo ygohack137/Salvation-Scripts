@@ -19,7 +19,7 @@ function c1833916.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCode(EVENT_DAMAGE)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e2:SetCountLimit(1,1833916)
 	e2:SetCondition(c1833916.spcon2)
 	e2:SetTarget(c1833916.sptg2)
@@ -52,7 +52,7 @@ function c1833916.spop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		if c:IsRelateToEffect(e) then
-			Duel.ChangePosition(c,POS_FACEUP_DEFENCE)
+			Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
 		end
 	end
 	local e1=Effect.CreateEffect(c)

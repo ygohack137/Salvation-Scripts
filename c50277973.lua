@@ -1,10 +1,11 @@
---Swamp Mirrorer
+--鏡像のスワンプマン
 function c50277973.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetTarget(c50277973.target)
 	e1:SetOperation(c50277973.activate)
 	c:RegisterEffect(e1)
@@ -50,7 +51,8 @@ function c50277973.activate(e,tp,eg,ep,ev,re,r,rp)
 	local att=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,50277973,0,0x11,1800,1000,4,rac,att) then return end
-	c:AddTrapMonsterAttribute(TYPE_NORMAL,att,rac,4,1800,1000)
-	Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)
-	c:TrapMonsterBlock()
+	c:AddMonsterAttribute(TYPE_NORMAL+TYPE_TRAP,att,rac,0,0,0)
+	Duel.SpecialSummonStep(c,0,tp,tp,true,false,POS_FACEUP)
+	c:AddMonsterAttributeComplete()
+	Duel.SpecialSummonComplete()
 end

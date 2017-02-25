@@ -1,4 +1,4 @@
---Typhoon
+--タイフーン
 function c14883228.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -26,10 +26,10 @@ function c14883228.handcon(e)
 		and Duel.IsExistingMatchingCard(c14883228.cfilter,tp,0,LOCATION_ONFIELD,2,nil)
 end
 function c14883228.filter(c)
-	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
+	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c14883228.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and c14883228.filter(chkc) end
+	if chkc then return chkc:IsOnField() and c14883228.filter(chkc) and chkc~=e:GetHandler() end
 	if chk==0 then return Duel.IsExistingTarget(c14883228.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,c14883228.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())

@@ -41,37 +41,40 @@ function c94977269.initial_effect(c)
 	e5:SetCategory(CATEGORY_TOHAND)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_TO_GRAVE)
-	e5:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e5:SetCondition(c94977269.thcon)
+	e5:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e5:SetTarget(c94977269.thtg)
 	e5:SetOperation(c94977269.thop)
 	c:RegisterEffect(e5)
 end
 function c94977269.ffilter1(c)
-	return c:IsSetCard(0x9d)
+	return c:IsFusionSetCard(0x9d) and not c:IsHasEffect(6205579)
 end
 function c94977269.ffilter2(c)
-	return c:IsAttribute(ATTRIBUTE_DARK) or c:IsHasEffect(4904633)
+	return (c:IsFusionAttribute(ATTRIBUTE_DARK) or c:IsHasEffect(4904633)) and not c:IsHasEffect(6205579)
 end
 function c94977269.exfilter(c,g)
 	return c:IsFaceup() and c:IsCanBeFusionMaterial() and not g:IsContains(c)
 end
 function c94977269.fuscon(e,g,gc,chkf)
 	if g==nil then return true end
+	local mg=g:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
 	local tp=e:GetHandlerPlayer()
 	local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 	local exg=Group.CreateGroup()
 	if fc and fc:IsHasEffect(81788994) and fc:IsCanRemoveCounter(tp,0x16,3,REASON_EFFECT) then
-		local sg=Duel.GetMatchingGroup(c94977269.exfilter,tp,0,LOCATION_MZONE,nil,g)
+		local sg=Duel.GetMatchingGroup(c94977269.exfilter,tp,0,LOCATION_MZONE,nil,mg)
 		exg:Merge(sg)
 	end
-	if gc then return (c94977269.ffilter1(gc) and (g:IsExists(c94977269.ffilter2,1,gc) or exg:IsExists(c94977269.ffilter2,1,gc)))
-		or (c94977269.ffilter2(gc) and (g:IsExists(c94977269.ffilter1,1,gc) or exg:IsExists(c94977269.ffilter1,1,gc))) end
+	if gc then
+		if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
+		return (c94977269.ffilter1(gc) and (mg:IsExists(c94977269.ffilter2,1,gc) or exg:IsExists(c94977269.ffilter2,1,gc)))
+			or (c94977269.ffilter2(gc) and (mg:IsExists(c94977269.ffilter1,1,gc) or exg:IsExists(c94977269.ffilter1,1,gc)))
+	end
 	local g1=Group.CreateGroup()
 	local g2=Group.CreateGroup()
 	local g3=Group.CreateGroup()
 	local g4=Group.CreateGroup()
-	local tc=g:GetFirst()
+	local tc=mg:GetFirst()
 	while tc do
 		if c94977269.ffilter1(tc) then
 			g1:AddCard(tc)
@@ -81,7 +84,7 @@ function c94977269.fuscon(e,g,gc,chkf)
 			g2:AddCard(tc)
 			if aux.FConditionCheckF(tc,chkf) then g4:AddCard(tc) end
 		end
-		tc=g:GetNext()
+		tc=mg:GetNext()
 	end
 	local exg1=exg:Filter(c94977269.ffilter1,nil)
 	local exg2=exg:Filter(c94977269.ffilter2,nil)
@@ -97,21 +100,22 @@ function c94977269.fuscon(e,g,gc,chkf)
 	end
 end
 function c94977269.fusop(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
+	local g=eg:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
 	local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 	local exg=Group.CreateGroup()
 	if fc and fc:IsHasEffect(81788994) and fc:IsCanRemoveCounter(tp,0x16,3,REASON_EFFECT) then
-		local sg=Duel.GetMatchingGroup(c94977269.exfilter,tp,0,LOCATION_MZONE,nil,eg)
+		local sg=Duel.GetMatchingGroup(c94977269.exfilter,tp,0,LOCATION_MZONE,nil,g)
 		exg:Merge(sg)
 	end
 	if gc then
 		local sg1=Group.CreateGroup()
 		local sg2=Group.CreateGroup()
 		if c94977269.ffilter1(gc) then
-			sg1:Merge(eg:Filter(c94977269.ffilter2,gc))
+			sg1:Merge(g:Filter(c94977269.ffilter2,gc))
 			sg2:Merge(exg:Filter(c94977269.ffilter2,gc))
 		end
 		if c94977269.ffilter2(gc) then
-			sg1:Merge(eg:Filter(c94977269.ffilter1,gc))
+			sg1:Merge(g:Filter(c94977269.ffilter1,gc))
 			sg2:Merge(exg:Filter(c94977269.ffilter1,gc))
 		end
 		local g1=nil
@@ -126,7 +130,7 @@ function c94977269.fusop(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
 		Duel.SetFusionMaterial(g1)
 		return
 	end
-	local sg=eg:Filter(aux.FConditionFilterF2c,nil,c94977269.ffilter1,c94977269.ffilter2)
+	local sg=g:Filter(aux.FConditionFilterF2c,nil,c94977269.ffilter1,c94977269.ffilter2)
 	local g1=nil
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 	if chkf~=PLAYER_NONE then
@@ -161,9 +165,6 @@ end
 function c94977269.indval(e,re,tp)
 	return tp~=e:GetHandlerPlayer()
 end
-function c94977269.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsReason(REASON_RETURN)
-end
 function c94977269.thfilter(c)
 	return c:IsSetCard(0x9d) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
 end
@@ -178,6 +179,5 @@ function c94977269.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
 	end
 end

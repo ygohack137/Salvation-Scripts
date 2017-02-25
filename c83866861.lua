@@ -2,13 +2,13 @@
 function c83866861.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep(c,c83866861.ffilter,3,false)
+	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xad),3,false)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c83866861.splimit)
+	e1:SetValue(aux.fuslimit)
 	c:RegisterEffect(e1)
 	--actlimit
 	local e2=Effect.CreateEffect(c)
@@ -39,12 +39,6 @@ function c83866861.initial_effect(c)
 	e4:SetValue(c83866861.atkval)
 	c:RegisterEffect(e4)
 end
-function c83866861.ffilter(c)
-	return c:IsSetCard(0xad) or c:IsHasEffect(36693940)
-end
-function c83866861.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
-end
 function c83866861.aclimit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)
 end
@@ -61,7 +55,7 @@ function c83866861.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and bc:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetTargetCard(bc)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,bc,1,0,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,bc,1,0,0)
 end
 function c83866861.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

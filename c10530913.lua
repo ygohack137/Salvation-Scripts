@@ -14,6 +14,7 @@ function c10530913.initial_effect(c)
 	--deck check
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(10530913,1))
+	e2:SetCategory(CATEGORY_DECKDES)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
@@ -25,7 +26,7 @@ function c10530913.initial_effect(c)
 	e3:SetDescription(aux.Stringid(10530913,2))
 	e3:SetCategory(CATEGORY_TOHAND)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetCondition(c10530913.thcon)
 	e3:SetTarget(c10530913.thtg)
@@ -33,7 +34,7 @@ function c10530913.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c10530913.cfilter(c)
-	return c:IsSetCard(0x90) and c:IsType(TYPE_MONSTER) and not c:IsReason(REASON_RETURN)
+	return c:IsSetCard(0x90) and c:IsType(TYPE_MONSTER)
 end
 function c10530913.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c10530913.cfilter,1,nil)
@@ -44,9 +45,9 @@ function c10530913.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c10530913.spop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
-		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
-	end
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function c10530913.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,1) end
@@ -65,8 +66,7 @@ function c10530913.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c10530913.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_DECK) and
-		(c:IsReason(REASON_REVEAL) or c:GetPreviousPosition()==POS_FACEUP_DEFENCE or Duel.IsPlayerAffectedByEffect(tp,EFFECT_REVERSE_DECK))
+	return c:IsPreviousLocation(LOCATION_DECK) and c:IsReason(REASON_REVEAL)
 end
 function c10530913.thfilter(c)
 	return c:IsSetCard(0x90) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()

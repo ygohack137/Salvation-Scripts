@@ -1,21 +1,15 @@
 --覚星輝士－セフィラビュート
 function c22617205.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--splimit
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e2:SetTargetRange(1,0)
 	e2:SetTarget(c22617205.splimit)
-	e2:SetCondition(c22617205.splimcon)
 	c:RegisterEffect(e2)
 	--destroy
 	local e3=Effect.CreateEffect(c)
@@ -39,19 +33,16 @@ function c22617205.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(0x9c) or c:IsSetCard(0xc4) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
-function c22617205.splimcon(e)
-	return not e:GetHandler():IsForbidden()
-end
 function c22617205.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_PENDULUM
 end
 function c22617205.filter1(c)
 	return ((c:IsLocation(LOCATION_MZONE) and c:IsFaceup())
 		or (c:IsLocation(LOCATION_SZONE) and (c:GetSequence()==6 or c:GetSequence()==7)))
-		and (c:IsSetCard(0x9c) or c:IsSetCard(0xc4)) and c:IsDestructable()
+		and (c:IsSetCard(0x9c) or c:IsSetCard(0xc4))
 end
 function c22617205.filter2(c)
-	return c:IsFacedown() and c:IsDestructable()
+	return c:IsFacedown()
 end
 function c22617205.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

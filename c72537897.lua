@@ -6,7 +6,6 @@ function c72537897.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCondition(c72537897.condition)
-	e1:SetCost(c72537897.cost)
 	e1:SetTarget(c72537897.target)
 	e1:SetOperation(c72537897.activate)
 	c:RegisterEffect(e1)
@@ -14,33 +13,22 @@ end
 function c72537897.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
-function c72537897.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetTargetRange(1,0)
-	e1:SetTarget(c72537897.splimit)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-end
-function c72537897.splimit(e,c)
-	return c:GetRace()~=RACE_BEAST
-end
 function c72537897.spfilter(c,e,tp)
 	return c:IsRace(RACE_BEAST) and c:IsLevelBelow(2) and c:IsType(TYPE_EFFECT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c72537897.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
 		local g=Duel.GetMatchingGroup(c72537897.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
-		return Duel.GetLocationCount(tp,LOCATION_MZONE)>2 and g:GetClassCount(Card.GetCode)>=3 end
+		return not Duel.IsPlayerAffectedByEffect(tp,59822133)
+			and Duel.GetLocationCount(tp,LOCATION_MZONE)>2 and g:GetClassCount(Card.GetCode)>=3 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,tp,LOCATION_DECK)
 end
 function c72537897.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=2 then return end
+	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(c72537897.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
-	if g:GetClassCount(Card.GetCode)>=3 then
+	if not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>2
+		and g:GetClassCount(Card.GetCode)>=3 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg1=g:Select(tp,1,1,nil)
 		g:Remove(Card.IsCode,nil,sg1:GetFirst():GetCode())
@@ -51,7 +39,6 @@ function c72537897.activate(e,tp,eg,ep,ev,re,r,rp)
 		local sg3=g:Select(tp,1,1,nil)
 		sg1:Merge(sg2)
 		sg1:Merge(sg3)
-		local c=e:GetHandler()
 		local fid=c:GetFieldID()
 		local tc=sg1:GetFirst()
 		while tc do
@@ -82,6 +69,19 @@ function c72537897.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterEffect(e3,tp)
 		Duel.SpecialSummonComplete()
 	end
+	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetTargetRange(1,0)
+		e1:SetTarget(c72537897.splimit)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+	end
+end
+function c72537897.splimit(e,c)
+	return c:GetRace()~=RACE_BEAST
 end
 function c72537897.desfilter(c,fid)
 	return c:GetFlagEffectLabel(72537897)==fid

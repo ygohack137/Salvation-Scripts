@@ -9,7 +9,7 @@ function c71870152.initial_effect(c)
 	e1:SetValue(c71870152.value)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
-	e2:SetCode(EFFECT_SET_DEFENCE)
+	e2:SetCode(EFFECT_SET_DEFENSE)
 	c:RegisterEffect(e2)
 	--level up
 	local e3=Effect.CreateEffect(c)
@@ -37,11 +37,11 @@ function c71870152.value(e,c)
 	return c:GetLevel()*200
 end
 function c71870152.lvcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and e:GetHandler():GetLevel()<12
+	return Duel.GetTurnPlayer()==tp and e:GetHandler():IsLevelAbove(1) and e:GetHandler():IsLevelBelow(11)
 end
 function c71870152.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
+	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:IsLevelAbove(12) then return end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_LEVEL)
@@ -54,7 +54,7 @@ function c71870152.descon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsFaceup() and c:IsAttackPos() and c:GetSummonType()==SUMMON_TYPE_SPECIAL+0x8
 end
 function c71870152.filter(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup()
 end
 function c71870152.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c71870152.filter(chkc) end

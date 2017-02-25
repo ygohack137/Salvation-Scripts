@@ -29,7 +29,7 @@ function c79766336.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 	if chk==0 then return Duel.IsExistingTarget(c79766336.filter,tp,LOCATION_GRAVE,0,1,nil) end
 	e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(79766336,0))
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g=Duel.SelectTarget(tp,c79766336.filter,tp,LOCATION_GRAVE,0,1,1,nil)
 	local te,ceg,cep,cev,cre,cr,crp=g:GetFirst():CheckActivateEffect(false,true,true)
 	Duel.ClearTargetCard()
@@ -40,6 +40,7 @@ function c79766336.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,0,0,0)
 end
 function c79766336.operation(e,tp,eg,ep,ev,re,r,rp)
 	local te=e:GetLabelObject()

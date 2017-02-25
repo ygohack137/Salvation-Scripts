@@ -41,6 +41,8 @@ function c72258771.cfilter1(c)
 	return c:IsCode(36623431) and c:IsAbleToGraveAsCost()
 end
 function c72258771.mtop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	Duel.HintSelection(Group.FromCards(c))
 	local g1=Duel.GetMatchingGroup(c72258771.cfilter1,tp,LOCATION_HAND,0,nil)
 	local select=1
 	if g1:GetCount()>0 then
@@ -53,18 +55,17 @@ function c72258771.mtop(e,tp,eg,ep,ev,re,r,rp)
 		local g=g1:Select(tp,1,1,nil)
 		Duel.SendtoGrave(g,REASON_COST)
 	else
-		Duel.Destroy(e:GetHandler(),REASON_COST)
+		Duel.Destroy(c,REASON_COST)
 	end
 end
 function c72258771.otfilter(c,tp)
 	return c:IsSetCard(0x1d) and (c:IsControler(tp) or c:IsFaceup())
 end
-function c72258771.otcon(e,c)
+function c72258771.otcon(e,c,minc)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local mg=Duel.GetMatchingGroup(c72258771.otfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)
-	return c:GetLevel()>6 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-1
-		and Duel.GetTributeCount(c,mg)>0
+	return c:GetLevel()>6 and minc<=1 and Duel.CheckTribute(c,1,1,mg)
 end
 function c72258771.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c72258771.otfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,tp)

@@ -1,12 +1,7 @@
 --DDケルベロス
 function c39153655.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--atk/def
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(39153655,0))
@@ -40,6 +35,7 @@ function c39153655.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c39153655.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:GetLevel()~=4 then
 		local e1=Effect.CreateEffect(c)
@@ -54,7 +50,7 @@ function c39153655.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(400)
 		tc:RegisterEffect(e2)
 		local e3=e2:Clone()
-		e3:SetCode(EFFECT_UPDATE_DEFENCE)
+		e3:SetCode(EFFECT_UPDATE_DEFENSE)
 		tc:RegisterEffect(e3)
 	end
 end
@@ -80,6 +76,5 @@ function c39153655.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tc)
 	end
 end

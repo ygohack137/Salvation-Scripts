@@ -47,19 +47,21 @@ end
 function c37910722.spfilter(c,e,tp,sync)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
 		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c37910722.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local mg=c:GetMaterial()
 	local ct=mg:GetCount()
 	if chk==0 then return c:GetSummonType()==SUMMON_TYPE_SYNCHRO
+		and not Duel.IsPlayerAffectedByEffect(tp,59822133)
 		and ct>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct
 		and mg:FilterCount(c37910722.spfilter,nil,e,tp,c)==ct end
 	Duel.SetTargetCard(mg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,mg,ct,0,0)
 end
 function c37910722.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	local c=e:GetHandler()
 	local mg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local g=mg:Filter(Card.IsRelateToEffect,nil,e)

@@ -30,7 +30,7 @@ function c57734012.regop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_PUBLIC)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_MAIN1)
 		c:RegisterEffect(e1)
-		c:RegisterFlagEffect(57734012,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_MAIN1,0,1)
+		c:RegisterFlagEffect(57734012,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_MAIN1,EFFECT_FLAG_CLIENT_HINT,1,0,66)
 	end
 end
 function c57734012.condition(e,tp,eg,ep,ev,re,r,rp)
@@ -43,8 +43,10 @@ function c57734012.filter1(c,e,tp)
 	local m=_G["c"..c:GetCode()]
 	if not m then return false end
 	local no=m.xyz_number
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
 	return no and no>=101 and no<=107 and c:IsSetCard(0x48) and not c:IsSetCard(0x1048)
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and (not ect or ect>1 or c:IsLocation(LOCATION_GRAVE))
 		and Duel.IsExistingMatchingCard(c57734012.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,no)
 end
 function c57734012.filter2(c,e,tp,mc,no)
@@ -62,7 +64,7 @@ function c57734012.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,57734012,0,0,0)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g1=Duel.SelectMatchingCard(tp,c57734012.filter1,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local g1=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c57734012.filter1),tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil,e,tp)
 	local tc1=g1:GetFirst()
 	if tc1 and Duel.SpecialSummon(tc1,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local m=_G["c"..tc1:GetCode()]
@@ -71,6 +73,7 @@ function c57734012.activate(e,tp,eg,ep,ev,re,r,rp)
 		local g2=Duel.SelectMatchingCard(tp,c57734012.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc1,m.xyz_number)
 		local tc2=g2:GetFirst()
 		if tc2 then
+			Duel.BreakEffect()
 			tc2:SetMaterial(g1)
 			Duel.Overlay(tc2,g1)
 			Duel.SpecialSummon(tc2,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)

@@ -16,7 +16,7 @@ function c11373345.cfilter(c)
 	return c:IsFaceup() and c:IsLevelAbove(7)
 end
 function c11373345.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c11373345.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(c11373345.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c11373345.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetActivityCount(tp,ACTIVITY_ATTACK)==0 end
@@ -25,11 +25,11 @@ function c11373345.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
 	e1:SetTargetRange(1,0)
-	e1:SetReset(RESET_PHASE+RESET_END)
+	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
 function c11373345.filter(c)
-	return c:IsFaceup() and c:IsLevelBelow(5) and c:IsDestructable()
+	return c:IsFaceup() and c:IsLevelBelow(5)
 end
 function c11373345.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c11373345.filter,tp,0,LOCATION_MZONE,1,nil) end

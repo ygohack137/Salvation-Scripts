@@ -13,7 +13,7 @@ function c56105047.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c56105047.filter(c,e,tp)
-	return c:GetCode()==62476815 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(62476815) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c56105047.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c56105047.filter(chkc,e,tp) end
@@ -26,10 +26,10 @@ end
 function c56105047.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENCE)==1 then
+	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)==1 then
 		if c:IsPosition(POS_FACEUP_ATTACK) and c:IsRelateToEffect(e) then
 			Duel.BreakEffect()
-			Duel.ChangePosition(c,POS_FACEUP_DEFENCE)
+			Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
 		end
 	end
 end
